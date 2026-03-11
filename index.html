@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USAG Libraries — Operations Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #f0f2f5;
+  --surface:   #ffffff;
+  --surface2:  #e8ecf1;
+  --surface3:  #dce2ea;
+  --border:    #c8d0db;
+  --border2:   #aab4c2;
+  --text:      #1a2233;
+  --text-dim:  #4a5670;
+  --text-muted:#7a8aa8;
+  --accent:    #008ece;
+  --accent2:   #0a569b;
+  --gold:      #fec31c;
+  --danger:    #ee3424;
+  --green:     #b2d234;
+  --orange:    #e37e26;
+  --radius:    6px;
+  --col-width: 268px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);}
+
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.15;
+}
+
+/* ═══ LOGIN PAGE ═══ */
+#page-login{
+  position:fixed;inset:0;z-index:9000;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0a569b 0%,#008ece 60%,#137abf 100%);
+}
+#page-login.hidden{display:none;}
+.login-box{
+  background:#ffffff;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:40px 36px;
+  width:380px;max-width:95vw;
+  display:flex;flex-direction:column;gap:0;
+  position:relative;z-index:1;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+.login-logo{
+  font-family:'Rajdhani',sans-serif;
+  font-size:22px;font-weight:700;
+  letter-spacing:4px;text-transform:uppercase;
+  text-align:center;margin-bottom:6px;
+  color:var(--text);
+}
+.login-logo span{color:var(--accent);}
+.login-sub{
+  font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--text-muted);text-align:center;margin-bottom:32px;
+}
+.login-label{
+  font-size:11px;font-weight:600;text-transform:uppercase;
+  letter-spacing:1px;color:var(--text-dim);
+  font-family:'Rajdhani',sans-serif;
+  margin-bottom:6px;display:block;
+}
+.login-input{
+  width:100%;background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--radius);color:var(--text);padding:10px 14px;
+  font-size:14px;font-family:'Source Sans 3',sans-serif;
+  outline:none;transition:border-color .15s;margin-bottom:14px;
+}
+.login-input:focus{border-color:var(--accent);}
+.login-btn{
+  width:100%;padding:11px;border-radius:var(--radius);border:none;
+  cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:14px;
+  font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  background:var(--accent);color:#ffffff;
+  transition:filter .15s;margin-top:4px;
+}
+.login-btn:hover{filter:brightness(1.1);}
+.login-btn:disabled{opacity:.5;cursor:not-allowed;filter:none;}
+.login-error{
+  color:var(--danger);font-size:12px;text-align:center;
+  margin-top:10px;min-height:18px;
+}
+.login-spinner{
+  display:none;text-align:center;color:var(--text-muted);
+  font-size:12px;margin-top:10px;letter-spacing:1px;
+}
+.login-spinner.show{display:block;}
+
+/* ═══ LOADING OVERLAY ═══ */
+#loading-overlay{
+  position:fixed;inset:0;z-index:8000;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:16px;
+}
+#loading-overlay.hidden{display:none;}
+.loading-text{
+  font-family:'Rajdhani',sans-serif;font-size:14px;
+  letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);
+}
+.loading-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);
+  animation:pulse 1s infinite;
+}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ═══ UTILITY ═══ */
+.page{position:fixed;inset:0;overflow:hidden;z-index:1;display:none;flex-direction:column;}
+.page.active{display:flex;}
+
+/* ═══ SHARED HEADER ═══ */
+.site-header{
+  display:flex;align-items:center;gap:16px;
+  padding:0 28px;height:54px;flex-shrink:0;
+  background:var(--accent2);
+  border-bottom:3px solid var(--gold);
+  position:relative;z-index:10;
+}
+.site-header::after{
+  content:'';position:absolute;bottom:-3px;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent2),var(--accent),var(--gold),var(--accent),var(--accent2));
+  opacity:.7;
+}
+.logo{
+  font-family:'Rajdhani',sans-serif;
+  font-size:18px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;
+  color:#ffffff;cursor:pointer;
+}
+.logo span{color:var(--gold);}
+.header-sep{width:1px;height:20px;background:rgba(255,255,255,.25);flex-shrink:0;}
+.breadcrumb{
+  font-family:'Rajdhani',sans-serif;
+  font-size:13px;letter-spacing:1.5px;
+  text-transform:uppercase;color:rgba(255,255,255,.7);
+  display:flex;align-items:center;gap:8px;
+}
+.breadcrumb .crumb{cursor:pointer;transition:color .15s;}
+.breadcrumb .crumb:hover{color:#ffffff;}
+.breadcrumb .sep{color:rgba(255,255,255,.4);}
+.breadcrumb .active{color:#ffffff;}
+.header-spacer{flex:1;}
+.btn{
+  padding:7px 18px;border-radius:var(--radius);border:none;cursor:pointer;
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;
+  transition:all .15s;
+}
+.btn:hover{filter:brightness(1.1);}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--accent);color:#ffffff;}
+.btn-ghost{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.25);}
+.btn-ghost:hover{background:rgba(255,255,255,.22);color:#ffffff;border-color:rgba(255,255,255,.5);filter:none;}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-gold{background:var(--gold);color:#1a2233;}
+.btn-sm{padding:4px 10px;font-size:11px;}
+.user-pill{
+  display:flex;align-items:center;gap:8px;
+  padding:4px 12px;border-radius:20px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  font-family:'Rajdhani',sans-serif;font-size:11px;
+  letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.9);
+}
+.user-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+
+/* ═══════════════════════════════════════
+   LANDING PAGE
+═══════════════════════════════════════ */
+#page-landing{
+  justify-content:center;align-items:center;
+  background:var(--bg);overflow:auto;
+}
+.landing-inner{
+  display:flex;flex-direction:column;align-items:center;
+  gap:0;padding:40px 20px;width:100%;max-width:900px;
+}
+.landing-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(28px,5vw,52px);
+  font-weight:700;letter-spacing:6px;text-transform:uppercase;
+  text-align:center;line-height:1;
+  color:var(--text);margin-bottom:6px;
+}
+.landing-title span{color:var(--accent);}
+.landing-sub{
+  font-size:13px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--text-muted);text-align:center;margin-bottom:52px;
+}
+.mode-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;
+  margin-bottom:52px;
+}
+.mode-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:28px 24px;
+  cursor:pointer;transition:all .2s;
+  position:relative;overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.mode-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 60%,rgba(0,142,206,.06));
+  opacity:0;transition:opacity .2s;
+}
+.mode-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,84,157,.15);}
+.mode-card:hover::before{opacity:1;}
+.mode-card.gold-mode::before{background:linear-gradient(135deg,transparent 60%,rgba(254,195,28,.1));}
+.mode-card.gold-mode:hover{border-color:var(--gold);box-shadow:0 12px 32px rgba(254,195,28,.15);}
+.mode-icon{font-size:32px;margin-bottom:14px;}
+.mode-title{
+  font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;color:var(--text);
+}
+.mode-card:hover .mode-title{color:var(--accent);}
+.mode-card.gold-mode:hover .mode-title{color:#c49500;}
+.mode-desc{font-size:13px;color:var(--text-dim);line-height:1.6;}
+.mode-arrow{
+  position:absolute;bottom:20px;right:20px;
+  font-size:20px;color:var(--text-muted);transition:all .2s;
+}
+.mode-card:hover .mode-arrow{color:var(--accent);transform:translateX(4px);}
+.mode-card.gold-mode:hover .mode-arrow{color:#c49500;}
+.library-section{width:100%;}
+.section-label{
+  font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);
+  margin-bottom:12px;text-align:center;
+}
+.library-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.lib-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:18px 16px;cursor:pointer;
+  transition:all .18s;position:relative;overflow:hidden;text-align:center;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.lib-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,84,157,.12);}
+.lib-card.selected{border-color:var(--accent);background:rgba(0,142,206,.06);}
+.lib-card-name{
+  font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;color:var(--text);
+}
+.lib-card-count{font-size:11px;color:var(--text-muted);}
+.lib-card.selected .lib-card-name{color:var(--accent);}
+
+/* mode picker overlay */
+.mode-picker-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.5);z-index:500;
+  align-items:center;justify-content:center;
+}
+.mode-picker-overlay.open{display:flex;}
+.mode-picker-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:32px;width:380px;max-width:95vw;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.mode-picker-box h3{
+  font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;
+}
+.mode-picker-box h2{
+  font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text);margin-bottom:24px;
+}
+.mode-pick-btn{
+  display:flex;align-items:center;gap:16px;
+  width:100%;padding:16px 18px;margin-bottom:10px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;cursor:pointer;transition:all .15s;text-align:left;
+}
+.mode-pick-btn:hover{border-color:var(--accent);background:rgba(0,142,206,.05);}
+.mode-pick-btn.gold:hover{border-color:var(--gold);background:rgba(254,195,28,.06);}
+.mode-pick-btn .mpb-icon{font-size:24px;}
+.mode-pick-btn .mpb-text strong{
+  display:block;font-family:'Rajdhani',sans-serif;font-size:15px;
+  font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;color:var(--text);
+}
+.mode-pick-btn .mpb-text span{font-size:12px;color:var(--text-dim);}
+
+/* ═══ COMMAND VIEW ═══ */
+#page-command .board-scroll{
+  flex:1;overflow-x:auto;overflow-y:hidden;
+  display:flex;align-items:flex-start;
+  padding:20px 24px 32px;gap:16px;
+}
+
+/* ═══ MY TASKS VIEW ═══ */
+#page-mytasks{align-items:center;justify-content:flex-start;}
+#page-mytasks .board-scroll{
+  flex:1;width:100%;overflow-y:auto;overflow-x:hidden;
+  display:flex;justify-content:center;
+  padding:24px 24px 40px;
+}
+.staff-picker-screen{
+  display:flex;flex-direction:column;align-items:center;
+  padding:40px 20px;gap:24px;
+}
+.staff-picker-screen h2{
+  font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--text);
+}
+.staff-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:10px;width:100%;max-width:700px;
+}
+.staff-pick-btn{
+  padding:16px 12px;background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;
+  cursor:pointer;transition:all .15s;text-align:center;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.staff-pick-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,84,157,.12);}
+.staff-pick-btn .spb-dot{width:12px;height:12px;border-radius:50%;margin:0 auto 10px;}
+.staff-pick-btn .spb-name{
+  font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;color:var(--text);
+}
+.staff-pick-btn .spb-count{font-size:11px;color:var(--text-muted);margin-top:4px;}
+.single-col-wrap{width:var(--col-width);flex-shrink:0;display:flex;flex-direction:column;gap:10px;}
+
+/* ═══ ADMIN PAGE ═══ */
+#page-admin{overflow:hidden;}
+#page-admin .admin-body{flex:1;overflow:auto;padding:28px 32px;display:flex;flex-direction:column;gap:32px;}
+.admin-lib-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.admin-lib-title{
+  font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text);
+}
+.admin-staff-list{display:flex;flex-wrap:wrap;gap:10px;}
+.admin-staff-chip{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;min-width:180px;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+}
+.admin-chip-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.admin-chip-name{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;flex:1;color:var(--text);
+}
+.admin-chip-actions{display:flex;gap:4px;}
+.admin-chip-actions button{
+  background:none;border:none;cursor:pointer;
+  color:var(--text-muted);font-size:14px;padding:2px 5px;
+  border-radius:4px;transition:all .15s;
+}
+.admin-chip-actions button:hover{background:var(--surface2);color:var(--text);}
+
+/* ═══ COLUMN & CARD ═══ */
+.column{width:var(--col-width);flex-shrink:0;display:flex;flex-direction:column;gap:10px;}
+.col-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-radius:var(--radius);
+  font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:#fff;position:relative;
+}
+.col-name{flex:1;outline:none;background:transparent;border:none;color:inherit;font:inherit;cursor:text;min-width:0;}
+.col-name:focus{text-decoration:underline;}
+.col-header-actions{display:flex;gap:5px;align-items:center;}
+.col-header-actions button{
+  background:rgba(0,0,0,.18);border:none;color:rgba(255,255,255,.85);
+  border-radius:4px;padding:3px 7px;font-size:12px;cursor:pointer;
+  line-height:1.4;transition:background .15s;
+}
+.col-header-actions button:hover{background:rgba(0,0,0,.35);}
+.sort-bar{display:flex;gap:4px;}
+.sort-btn{
+  flex:1;padding:4px 4px;background:var(--surface);
+  border:1px solid var(--border);color:var(--text-muted);
+  border-radius:var(--radius);font-size:10px;font-weight:600;
+  font-family:'Rajdhani',sans-serif;letter-spacing:.5px;text-transform:uppercase;
+  cursor:pointer;text-align:center;transition:all .15s;
+}
+.sort-btn:hover{color:var(--text);border-color:var(--border2);}
+.sort-btn.active{background:var(--accent);color:#ffffff;border-color:var(--accent);}
+.cards-container{display:flex;flex-direction:column;gap:8px;min-height:60px;padding:4px 0;}
+.cards-container.drag-over{
+  background:rgba(0,142,206,.05);border-radius:var(--radius);
+  outline:2px dashed rgba(0,142,206,.3);
+}
+.add-card-btn{
+  width:100%;padding:8px;background:transparent;
+  border:1px dashed var(--border);border-radius:var(--radius);
+  color:var(--text-muted);font-size:12px;font-family:'Rajdhani',sans-serif;
+  font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.add-card-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,142,206,.04);}
+.add-col-btn{
+  width:200px;flex-shrink:0;padding:14px;background:transparent;
+  border:2px dashed var(--border);border-radius:var(--radius);
+  color:var(--text-muted);font-size:13px;font-family:'Rajdhani',sans-serif;
+  font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:8px;transition:all .15s;align-self:flex-start;
+}
+.add-col-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,142,206,.04);}
+.card{
+  border-radius:var(--radius);border-left:4px solid transparent;
+  background:var(--surface);cursor:grab;
+  transition:transform .15s,box-shadow .15s;user-select:none;position:relative;
+  box-shadow:0 1px 4px rgba(0,0,0,.08);
+}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.12);}
+.card.dragging{opacity:.35;transform:scale(.97);cursor:grabbing;}
+.card-face{padding:10px 12px;display:flex;align-items:flex-start;gap:8px;}
+.card-color-dot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+.card-content{flex:1;min-width:0;}
+.card-title{font-weight:600;font-size:13px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+.card-meta{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;align-items:center;}
+.badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;
+  text-transform:uppercase;letter-spacing:.5px;font-family:'Rajdhani',sans-serif;}
+.badge-priority-high{background:rgba(238,52,36,.12);color:#cc2010;}
+.badge-priority-medium{background:rgba(227,126,38,.15);color:#b05a00;}
+.badge-priority-low{background:rgba(76,175,80,.12);color:#2d7a30;}
+.badge-date{background:var(--surface2);color:var(--text-dim);}
+.badge-freq{background:rgba(0,142,206,.1);color:#005f8a;}
+.card-expand-btn{
+  background:none;border:none;color:var(--text-muted);
+  font-size:14px;cursor:pointer;padding:2px 4px;line-height:1;transition:color .15s;flex-shrink:0;
+}
+.card-expand-btn:hover{color:var(--text);}
+.card-detail{
+  padding:8px 12px 10px 29px;font-size:12px;color:var(--text-dim);
+  line-height:1.6;display:none;border-top:1px solid var(--border);background:var(--bg);
+}
+.card-detail.open{display:block;}
+.card-detail-actions{display:flex;gap:6px;margin-top:8px;}
+
+/* ═══ MODALS ═══ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.5);z-index:999;
+  align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:28px;width:420px;
+  max-width:95vw;max-height:90vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.modal h2{
+  font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;color:var(--text);
+}
+.form-group{margin-bottom:14px;}
+.form-group label{
+  display:block;font-size:11px;font-weight:600;text-transform:uppercase;
+  letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;
+  font-family:'Rajdhani',sans-serif;
+}
+.form-group input,.form-group textarea,.form-group select{
+  width:100%;background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--radius);color:var(--text);padding:9px 12px;
+  font-size:14px;font-family:'Source Sans 3',sans-serif;outline:none;transition:border-color .15s;
+}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--accent);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-group select option{background:var(--surface);}
+.color-picker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.color-swatch{
+  width:100%;aspect-ratio:1;border-radius:4px;cursor:pointer;
+  border:2px solid transparent;transition:transform .1s,border-color .1s;
+}
+.color-swatch:hover{transform:scale(1.15);}
+.color-swatch.selected{border-color:#1a2233;transform:scale(1.15);}
+.modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
+
+/* ═══ TOAST ═══ */
+#toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--accent2);border:1px solid var(--accent);
+  border-radius:var(--radius);padding:12px 18px;font-size:13px;
+  color:#ffffff;z-index:9999;opacity:0;transform:translateY(8px);
+  transition:opacity .2s,transform .2s;pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateY(0);}
+.page{animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--surface2);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--text-muted);}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN PAGE ═══ -->
+<div id="page-login">
+  <div class="login-box">
+    <div class="login-logo">USAG <span>Libraries</span></div>
+    <div class="login-sub">Operations Dashboard</div>
+    <label class="login-label">Email</label>
+    <input class="login-input" type="email" id="login-email" placeholder="library@example.com" autocomplete="username">
+    <label class="login-label">Password</label>
+    <input class="login-input" type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+    <button class="login-btn" id="login-btn">Sign In</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-spinner" id="login-spinner">Authenticating…</div>
+  </div>
+</div>
+
+<!-- ═══ LOADING OVERLAY ═══ -->
+<div id="loading-overlay">
+  <div class="loading-dot"></div>
+  <div class="loading-text">Loading dashboard…</div>
+</div>
+
+<!-- ═══ LANDING PAGE ═══ -->
+<div class="page" id="page-landing">
+  <div class="site-header">
+    <div class="logo">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb"><span class="active">Home</span></div>
+    <div class="header-spacer"></div>
+    <div class="user-pill" id="user-pill"><div class="dot"></div><span id="user-pill-name">—</span></div>
+    <button class="btn btn-ghost btn-sm" id="btn-manage-staff" onclick="goAdmin()">⚙ Manage Staff</button>
+    <button class="btn btn-ghost btn-sm" id="btn-export" onclick="exportData()">⬇ Export</button>
+    <button class="btn btn-ghost btn-sm" id="btn-import" onclick="document.getElementById('importFile').click()">⬆ Import</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    <button class="btn btn-ghost btn-sm" onclick="doLogout()">Sign Out</button>
+  </div>
+  <div style="flex:1;overflow:auto;display:flex;justify-content:center;">
+    <div class="landing-inner">
+      <div class="landing-title">Operations <span>Dashboard</span></div>
+      <div class="landing-sub">USAG Kaiserslautern — Library Network</div>
+      <div class="mode-row" id="mode-row">
+        <div class="mode-card" id="card-command" onclick="openModePicker('command')">
+          <div class="mode-icon">🗂</div>
+          <div class="mode-title">Command View</div>
+          <div class="mode-desc">Full library board. See all staff columns side by side. Drag tasks between staff members.</div>
+          <div class="mode-arrow">→</div>
+        </div>
+        <div class="mode-card gold-mode" onclick="openModePicker('mytasks')">
+          <div class="mode-icon">👤</div>
+          <div class="mode-title">My Tasks</div>
+          <div class="mode-desc">Staff view. Select your library and your name to see your assigned tasks.</div>
+          <div class="mode-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODE PICKER OVERLAY ═══ -->
+<div class="mode-picker-overlay" id="modePickerOverlay">
+  <div class="mode-picker-box">
+    <h3>Select Library</h3>
+    <h2 id="modePickerTitle">Command View</h2>
+    <div id="modePickerLibs"></div>
+    <div style="margin-top:8px">
+      <button class="btn btn-ghost" style="width:100%" onclick="closeModePickerOverlay()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ COMMAND VIEW ═══ -->
+<div class="page" id="page-command">
+  <div class="site-header">
+    <div class="logo" onclick="goHome()">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb">
+      <span class="crumb" onclick="goHome()">Home</span>
+      <span class="sep">›</span>
+      <span class="active" id="cmd-breadcrumb">Command View</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="btn btn-ghost btn-sm" onclick="goAdmin()">⚙ Staff</button>
+    <button class="btn btn-ghost btn-sm" onclick="exportData()">⬇ Export</button>
+  </div>
+  <div class="board-scroll" id="command-board"></div>
+</div>
+
+<!-- ═══ MY TASKS VIEW ═══ -->
+<div class="page" id="page-mytasks">
+  <div class="site-header">
+    <div class="logo" onclick="goHome()">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb">
+      <span class="crumb" onclick="goHome()">Home</span>
+      <span class="sep">›</span>
+      <span class="crumb" id="mt-lib-crumb" onclick="goBackToStaffPicker()"></span>
+      <span class="sep" id="mt-sep2" style="display:none">›</span>
+      <span class="active" id="mt-staff-crumb"></span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="btn btn-ghost btn-sm" id="mt-switch-btn" style="display:none" onclick="goBackToStaffPicker()">Switch Staff</button>
+    <button class="btn btn-ghost btn-sm" id="mt-edit-toggle" style="display:none" onclick="toggleMyTasksEdit()">🔒 Locked</button>
+  </div>
+  <div id="mytasks-body" style="flex:1;overflow:auto;display:flex;flex-direction:column;align-items:center;"></div>
+</div>
+
+<!-- ═══ ADMIN PAGE ═══ -->
+<div class="page" id="page-admin">
+  <div class="site-header">
+    <div class="logo" onclick="goHome()">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb">
+      <span class="crumb" onclick="goHome()">Home</span>
+      <span class="sep">›</span>
+      <span class="active">Manage Staff</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="btn btn-ghost btn-sm" onclick="goHome()">← Back</button>
+  </div>
+  <div class="admin-body" id="admin-body"></div>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+<div class="modal-overlay" id="staffModal">
+  <div class="modal">
+    <h2 id="staffModalTitle">Add Staff Member</h2>
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" id="staffName" placeholder="e.g. SGT Johnson">
+    </div>
+    <div class="form-group">
+      <label>Outlook Calendar Color</label>
+      <div class="color-picker-grid" id="staffColorGrid"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('staffModal')">Cancel</button>
+      <button class="btn btn-primary" id="staffSaveBtn" onclick="saveStaff()">Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="cardModal">
+  <div class="modal">
+    <h2 id="cardModalTitle">Add Task</h2>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" id="cardTitle" placeholder="Short reference name" maxlength="60">
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="cardDesc" placeholder="Full description of what this task entails…"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Priority</label>
+      <select id="cardPriority">
+        <option value="none">— None —</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Due Date</label>
+      <input type="date" id="cardDate">
+    </div>
+    <div class="form-group">
+      <label>Frequency</label>
+      <select id="cardFreq">
+        <option value="">— None —</option>
+        <option value="Daily">Daily</option>
+        <option value="Weekly">Weekly</option>
+        <option value="Bi-Weekly">Bi-Weekly</option>
+        <option value="Monthly">Monthly</option>
+        <option value="Quarterly">Quarterly</option>
+        <option value="Annual">Annual</option>
+        <option value="As Needed">As Needed</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Card Color</label>
+      <div class="color-picker-grid" id="cardColorGrid"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('cardModal')">Cancel</button>
+      <button class="btn btn-primary" id="cardSaveBtn" onclick="saveCard()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ═══ FIREBASE SDK ═══ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ═══ FIREBASE CONFIG ═══
+const firebaseConfig = {
+  apiKey: "AIzaSyC5Adfrlmvqv44N7CpgqAa2rGUZwAP4Gyk",
+  authDomain: "usagrplibraries-ops-dashboard.firebaseapp.com",
+  projectId: "usagrplibraries-ops-dashboard",
+  storageBucket: "usagrplibraries-ops-dashboard.firebasestorage.app",
+  messagingSenderId: "671577566151",
+  appId: "1:671577566151:web:9a29c0ceb45117f14d87e2"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ═══ EMAIL → LIBRARY MAP ═══
+const EMAIL_TO_LIB = {
+  'rpbaumholderlibrary@gmail.com':  'baumholder',
+  'rplandstuhllibrary@gmail.com':   'landstuhl',
+  'rpkleberbranchlibrary@gmail.com':'kleber',
+};
+const DIRECTOR_EMAIL = 'rplibrarydirector@gmail.com';
+function isDirector(){ return currentUser && currentUser.email === DIRECTOR_EMAIL; }
+function isLocationUser(){ return currentUser && EMAIL_TO_LIB[currentUser.email]; }
+
+// ═══ CONSTANTS ═══
+const LIBRARIES = [
+  { id:'kleber',     name:'Kleber Branch Library',  short:'Kleber' },
+  { id:'landstuhl',  name:'Landstuhl Library',       short:'Landstuhl' },
+  { id:'baumholder', name:'Baumholder Library',      short:'Baumholder' },
+];
+const OUTLOOK_COLORS = [
+  {name:'Red',hex:'#e74856'},{name:'Orange',hex:'#ff8c00'},{name:'Peach',hex:'#f7630c'},
+  {name:'Yellow',hex:'#ffd600'},{name:'Green',hex:'#498205'},{name:'Teal',hex:'#00b7c3'},
+  {name:'Olive',hex:'#847545'},{name:'Blue',hex:'#0078d4'},{name:'Purple',hex:'#8764b8'},
+  {name:'Cranberry',hex:'#c239b3'},{name:'Steel',hex:'#546e7a'},{name:'Dark Red',hex:'#a4262c'},
+  {name:'Dark Orange',hex:'#ca5010'},{name:'Dark Peach',hex:'#da3b01'},{name:'Dark Yellow',hex:'#c19c00'},
+  {name:'Dark Green',hex:'#376000'},{name:'Dark Teal',hex:'#038387'},{name:'Dark Olive',hex:'#6d5a00'},
+  {name:'Dark Blue',hex:'#004e8c'},{name:'Dark Purple',hex:'#5c2e91'},{name:'Dark Cranberry',hex:'#9b0062'},
+  {name:'Dark Steel',hex:'#37474f'},{name:'Light Pink',hex:'#f4a7b9'},{name:'Light Blue',hex:'#a9d3f2'},
+  {name:'Light Green',hex:'#a9d18e'},
+];
+const CARD_COLORS = [
+  '#ff6b6b','#ff9f43','#ffd32a','#0be881','#17c0eb',
+  '#7efff5','#d980fa','#f8a5c2','#f9ca24','#6ab04c',
+  '#4834d4','#eb4d4b','#22a6b3','#be2edd','#e67e22',
+  '#badc58','#c7ecee','#fab1a0','#fdcb6e','#a29bfe',
+];
+const SORT_MODES  = ['manual','priority','date','freq'];
+const SORT_LABELS = {manual:'Manual',priority:'Priority',date:'Due Date',freq:'Freq'};
+const FREQ_ORDER  = {Daily:0,Weekly:1,'Bi-Weekly':2,Monthly:3,Quarterly:4,Annual:5,'As Needed':6,'':7};
+const PRIO_ORDER  = {high:0,medium:1,low:2,none:3};
+
+// ═══ STATE ═══
+let state = { libraries:{} };
+LIBRARIES.forEach(l => { state.libraries[l.id] = { columns:[] }; });
+let currentUser = null;
+let currentLibId = null; // library this user is locked to (null = admin sees all)
+let unsubscribeSnapshot = null;
+let isSaving = false;
+
+// ═══ AUTH ═══
+window.doLogin = async function() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  const btn   = document.getElementById('login-btn');
+  const spin  = document.getElementById('login-spinner');
+  errEl.textContent = '';
+  btn.disabled = true;
+  spin.classList.add('show');
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    errEl.textContent = 'Invalid email or password.';
+    btn.disabled = false;
+    spin.classList.remove('show');
+  }
+};
+
+window.doLogout = async function() {
+  if(unsubscribeSnapshot){ unsubscribeSnapshot(); unsubscribeSnapshot=null; }
+  await signOut(auth);
+};
+
+// Enter key on login
+document.getElementById('login-btn').addEventListener('click', () => window.doLogin());
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if(e.key === 'Enter') window.doLogin();
+});
+document.getElementById('login-email').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('login-pass').focus();
+});
+
+// ═══ AUTH STATE LISTENER ═══
+onAuthStateChanged(auth, async (user) => {
+  if(user) {
+    currentUser = user;
+    const mapped = EMAIL_TO_LIB[user.email];
+    currentLibId = mapped || null;
+
+    // Update user pill
+    let pillName;
+    if(user.email === DIRECTOR_EMAIL) pillName = 'Director';
+    else if(mapped) pillName = LIBRARIES.find(l=>l.id===mapped)?.short;
+    else pillName = user.email;
+    document.getElementById('user-pill-name').textContent = pillName;
+
+    // Hide login, show loading
+    document.getElementById('page-login').classList.add('hidden');
+    document.getElementById('loading-overlay').classList.remove('hidden');
+
+    // Subscribe to Firestore
+    await subscribeToData();
+
+    document.getElementById('loading-overlay').classList.add('hidden');
+    showPage('page-landing');
+    applyRoleUI();
+  } else {
+    currentUser = null;
+    currentLibId = null;
+    if(unsubscribeSnapshot){ unsubscribeSnapshot(); unsubscribeSnapshot=null; }
+    document.getElementById('loading-overlay').classList.add('hidden');
+    document.getElementById('page-login').classList.remove('hidden');
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  }
+});
+
+// ═══ FIRESTORE ═══
+async function subscribeToData() {
+  return new Promise((resolve) => {
+    const docRef = doc(db, 'dashboard', 'state');
+    let resolved = false;
+    unsubscribeSnapshot = onSnapshot(docRef, (snap) => {
+      if(snap.exists()) {
+        const data = snap.data();
+        if(data && data.libraries) {
+          // Only update if we're not in the middle of saving (prevents flicker)
+          if(!isSaving) {
+            state = data;
+            LIBRARIES.forEach(l => {
+              if(!state.libraries[l.id]) state.libraries[l.id] = { columns:[] };
+            });
+            // Re-render current view if already on a page
+            if(document.getElementById('page-command').classList.contains('active') && currentLib) {
+              renderCommandBoard(currentLib);
+            }
+          }
+        }
+      } else {
+        // First run — initialize empty state
+        state = { libraries:{} };
+        LIBRARIES.forEach(l => { state.libraries[l.id] = { columns:[] }; });
+      }
+      if(!resolved){ resolved=true; resolve(); }
+    });
+  });
+}
+
+async function saveToFirestore() {
+  isSaving = true;
+  try {
+    const docRef = doc(db, 'dashboard', 'state');
+    await setDoc(docRef, JSON.parse(JSON.stringify(state)));
+  } catch(e) {
+    toast('Save failed — check connection.');
+    console.error(e);
+  }
+  setTimeout(() => { isSaving = false; }, 500);
+}
+
+// Replace localStorage save with Firestore
+window.save = function() { saveToFirestore(); };
+
+// ═══ NAVIGATION ═══
+let currentLib = null, currentMode = null, currentStaffId = null;
+let myTasksEditMode = false;
+
+function applyRoleUI(){
+  const director = isDirector();
+  const cmdCard = document.getElementById('card-command');
+  if(cmdCard) cmdCard.style.display = director ? '' : 'none';
+  const modeRow = document.getElementById('mode-row');
+  if(modeRow) modeRow.style.gridTemplateColumns = director ? '1fr 1fr' : '1fr';
+  ['btn-manage-staff','btn-export','btn-import'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display = director ? '' : 'none';
+  });
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id === 'page-landing') applyRoleUI();
+}
+window.goHome = function(){ showPage('page-landing'); };
+
+window.openModePicker = function(mode) {
+  // Block location users from command view
+  if(mode === 'command' && !isDirector()){
+    toast('Access restricted.');
+    return;
+  }
+  currentMode = mode;
+  document.getElementById('modePickerTitle').textContent = mode==='command' ? 'Command View' : 'My Tasks';
+  const container = document.getElementById('modePickerLibs');
+  container.innerHTML = '';
+
+  // If user is locked to a library, skip the picker and go straight in
+  if(currentLibId) {
+    closeModePickerOverlay();
+    launchMode(mode, currentLibId);
+    return;
+  }
+
+  LIBRARIES.forEach(lib => {
+    const btn = document.createElement('button');
+    btn.className = 'mode-pick-btn' + (mode==='mytasks'?' gold':'');
+    btn.innerHTML = `
+      <span class="mpb-icon">${mode==='command'?'🗂':'📋'}</span>
+      <span class="mpb-text">
+        <strong>${lib.short}</strong>
+        <span>${lib.name}</span>
+      </span>`;
+    btn.onclick = () => { closeModePickerOverlay(); launchMode(mode, lib.id); };
+    container.appendChild(btn);
+  });
+  document.getElementById('modePickerOverlay').classList.add('open');
+};
+
+function closeModePickerOverlay(){
+  document.getElementById('modePickerOverlay').classList.remove('open');
+}
+window.closeModePickerOverlay = closeModePickerOverlay;
+
+document.getElementById('modePickerOverlay').addEventListener('click', e => {
+  if(e.target === document.getElementById('modePickerOverlay')) closeModePickerOverlay();
+});
+
+function launchMode(mode, libId) {
+  currentLib = libId;
+  const lib = LIBRARIES.find(l=>l.id===libId);
+  if(mode==='command'){
+    document.getElementById('cmd-breadcrumb').textContent = lib.name + ' — Command View';
+    renderCommandBoard(libId);
+    showPage('page-command');
+  } else {
+    document.getElementById('mt-lib-crumb').textContent = lib.short;
+    document.getElementById('mt-sep2').style.display='none';
+    document.getElementById('mt-staff-crumb').textContent='';
+    document.getElementById('mt-switch-btn').style.display='none';
+    document.getElementById('mt-edit-toggle').style.display='none';
+    myTasksEditMode = false;
+    renderStaffPicker(libId);
+    showPage('page-mytasks');
+  }
+}
+
+window.goAdmin = function() { if(!isDirector()){ toast('Access restricted.'); return; } renderAdmin(); showPage('page-admin'); };
+window.goBackToStaffPicker = function() {
+  if(currentLib){
+    document.getElementById('mt-sep2').style.display='none';
+    document.getElementById('mt-staff-crumb').textContent='';
+    document.getElementById('mt-switch-btn').style.display='none';
+    document.getElementById('mt-edit-toggle').style.display='none';
+    myTasksEditMode = false;
+    renderStaffPicker(currentLib);
+  }
+};
+
+// ═══ COMMAND BOARD ═══
+function renderCommandBoard(libId){
+  const board = document.getElementById('command-board');
+  board.innerHTML='';
+  const lib = state.libraries[libId];
+  lib.columns.forEach(col => board.appendChild(buildColumn(col, libId, false)));
+  const addBtn = document.createElement('button');
+  addBtn.className='add-col-btn';
+  addBtn.innerHTML='＋ Add Staff';
+  addBtn.onclick=()=> openAddStaff(libId);
+  board.appendChild(addBtn);
+  initDragDrop(board, libId);
+}
+
+// ═══ STAFF PICKER ═══
+function renderStaffPicker(libId){
+  const body = document.getElementById('mytasks-body');
+  body.innerHTML='';
+  const lib = state.libraries[libId];
+  const libMeta = LIBRARIES.find(l=>l.id===libId);
+  const screen = document.createElement('div');
+  screen.className='staff-picker-screen';
+  const h2 = document.createElement('h2');
+  h2.textContent = libMeta.name;
+  screen.appendChild(h2);
+  const sub = document.createElement('div');
+  sub.style.cssText='font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:-16px;margin-bottom:8px;';
+  sub.textContent='Select a staff member';
+  screen.appendChild(sub);
+  if(lib.columns.length===0){
+    const empty = document.createElement('div');
+    empty.style.cssText='color:var(--text-muted);font-size:14px;text-align:center;margin-top:20px;';
+    empty.textContent='No staff added yet. Use Manage Staff to add staff members.';
+    screen.appendChild(empty);
+  } else {
+    const grid = document.createElement('div');
+    grid.className='staff-grid';
+    lib.columns.forEach(col=>{
+      const btn = document.createElement('div');
+      btn.className='staff-pick-btn';
+      btn.style.borderColor = col.color+'55';
+      btn.innerHTML=`
+        <div class="spb-dot" style="background:${col.color}"></div>
+        <div class="spb-name">${col.name}</div>
+        <div class="spb-count">${col.cards.length} task${col.cards.length!==1?'s':''}</div>`;
+      btn.onclick=()=> openStaffTasks(libId, col.id);
+      grid.appendChild(btn);
+    });
+    screen.appendChild(grid);
+  }
+  body.appendChild(screen);
+}
+
+function openStaffTasks(libId, colId){
+  currentStaffId = colId;
+  const lib = state.libraries[libId];
+  const col = lib.columns.find(c=>c.id===colId);
+  document.getElementById('mt-sep2').style.display='';
+  document.getElementById('mt-staff-crumb').textContent = col.name;
+  document.getElementById('mt-switch-btn').style.display='';
+  const toggleBtn = document.getElementById('mt-edit-toggle');
+  toggleBtn.style.display='';
+  toggleBtn.textContent = myTasksEditMode ? '🔓 Editing' : '🔒 Locked';
+  toggleBtn.style.borderColor = myTasksEditMode ? 'var(--gold)' : '';
+  toggleBtn.style.color = myTasksEditMode ? 'var(--gold)' : '';
+  const body = document.getElementById('mytasks-body');
+  body.innerHTML='';
+  const wrap = document.createElement('div');
+  wrap.style.cssText='padding:24px 24px 40px;display:flex;justify-content:center;width:100%;';
+  const colEl = buildColumn(col, libId, !myTasksEditMode);
+  wrap.appendChild(colEl);
+  body.appendChild(wrap);
+  initDragDrop(wrap, libId);
+}
+
+window.toggleMyTasksEdit = function() {
+  myTasksEditMode = !myTasksEditMode;
+  if(currentLib && currentStaffId) openStaffTasks(currentLib, currentStaffId);
+};
+
+// ═══ ADMIN ═══
+function renderAdmin(){
+  const body = document.getElementById('admin-body');
+  body.innerHTML='';
+  // If locked to a library, only show that one
+  const libs = currentLibId ? LIBRARIES.filter(l=>l.id===currentLibId) : LIBRARIES;
+  libs.forEach(libMeta=>{
+    const lib = state.libraries[libMeta.id];
+    const section = document.createElement('div');
+    section.className='admin-lib-section';
+    const hdr = document.createElement('div');
+    hdr.className='admin-lib-header';
+    const title = document.createElement('div');
+    title.className='admin-lib-title';
+    title.textContent = libMeta.name;
+    const addBtn = document.createElement('button');
+    addBtn.className='btn btn-primary btn-sm';
+    addBtn.textContent='+ Add Staff';
+    addBtn.onclick=()=> openAddStaff(libMeta.id, ()=>{ renderAdmin(); });
+    hdr.appendChild(title);
+    hdr.appendChild(addBtn);
+    const list = document.createElement('div');
+    list.className='admin-staff-list';
+    if(lib.columns.length===0){
+      const empty = document.createElement('div');
+      empty.style.cssText='color:var(--text-muted);font-size:13px;';
+      empty.textContent='No staff added yet.';
+      list.appendChild(empty);
+    } else {
+      lib.columns.forEach(col=>{
+        const chip = document.createElement('div');
+        chip.className='admin-staff-chip';
+        chip.innerHTML=`
+          <div class="admin-chip-dot" style="background:${col.color}"></div>
+          <div class="admin-chip-name">${col.name}</div>
+          <div class="admin-chip-actions">
+            <button title="Edit" onclick="openEditStaff('${libMeta.id}','${col.id}')">🎨</button>
+            <button title="Remove" onclick="removeColumn('${libMeta.id}','${col.id}')">✕</button>
+          </div>`;
+        list.appendChild(chip);
+      });
+    }
+    section.appendChild(hdr);
+    section.appendChild(list);
+    body.appendChild(section);
+  });
+}
+
+// ═══ BUILD COLUMN ═══
+function buildColumn(col, libId, readOnly){
+  const wrap = document.createElement('div');
+  wrap.className='column';
+  wrap.dataset.colId=col.id;
+  const hdr = document.createElement('div');
+  hdr.className='col-header';
+  hdr.style.background=col.color;
+  const rgb=hexToRgb(col.color);
+  const lum=rgb?(0.299*rgb.r+0.587*rgb.g+0.114*rgb.b)/255:1;
+  hdr.style.color=lum>0.55?'#111':'#fff';
+  const nameEl=document.createElement('span');
+  nameEl.className='col-name';
+  nameEl.contentEditable=!readOnly;
+  nameEl.spellcheck=false;
+  nameEl.textContent=col.name;
+  if(!readOnly){
+    nameEl.addEventListener('blur',()=>{ col.name=nameEl.textContent.trim()||col.name; save(); });
+    nameEl.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();nameEl.blur();} });
+  }
+  const actions=document.createElement('div');
+  actions.className='col-header-actions';
+  if(!readOnly){
+    const editBtn=document.createElement('button');
+    editBtn.innerHTML='🎨';
+    editBtn.title='Change color';
+    editBtn.onclick=()=>openEditStaff(libId, col.id);
+    actions.appendChild(editBtn);
+  }
+  hdr.appendChild(nameEl);
+  hdr.appendChild(actions);
+  const sortBar=document.createElement('div');
+  sortBar.className='sort-bar';
+  SORT_MODES.forEach(mode=>{
+    const btn=document.createElement('button');
+    btn.className='sort-btn'+(col.sort===mode?' active':'');
+    btn.textContent=SORT_LABELS[mode];
+    btn.onclick=()=>{ col.sort=mode; save();
+      const container=wrap.querySelector('.cards-container');
+      rebuildCards(container, col, libId, readOnly);
+      wrap.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+    sortBar.appendChild(btn);
+  });
+  const cardsWrap=document.createElement('div');
+  cardsWrap.className='cards-container';
+  cardsWrap.dataset.colId=col.id;
+  rebuildCards(cardsWrap, col, libId, readOnly);
+  if(!readOnly){
+    const addBtn=document.createElement('button');
+    addBtn.className='add-card-btn';
+    addBtn.innerHTML='＋ Add Task';
+    addBtn.onclick=()=>openAddCard(libId, col.id);
+    wrap.appendChild(hdr);
+    wrap.appendChild(sortBar);
+    wrap.appendChild(cardsWrap);
+    wrap.appendChild(addBtn);
+  } else {
+    wrap.appendChild(hdr);
+    wrap.appendChild(sortBar);
+    wrap.appendChild(cardsWrap);
+  }
+  return wrap;
+}
+
+function rebuildCards(container, col, libId, readOnly){
+  container.innerHTML='';
+  getSortedCards(col).forEach(card=> container.appendChild(buildCard(card, col.id, libId)));
+}
+function getSortedCards(col){
+  const cards=[...col.cards];
+  if(col.sort==='priority') return cards.sort((a,b)=>(PRIO_ORDER[a.priority||'none'])-(PRIO_ORDER[b.priority||'none']));
+  if(col.sort==='date') return cards.sort((a,b)=>{ if(!a.date&&!b.date)return 0; if(!a.date)return 1; if(!b.date)return-1; return new Date(a.date)-new Date(b.date); });
+  if(col.sort==='freq') return cards.sort((a,b)=>(FREQ_ORDER[a.freq]??7)-(FREQ_ORDER[b.freq]??7));
+  return cards.sort((a,b)=>(a.manualOrder??0)-(b.manualOrder??0));
+}
+
+// ═══ BUILD CARD ═══
+function buildCard(card, colId, libId){
+  const el=document.createElement('div');
+  el.className='card';
+  el.dataset.cardId=card.id;
+  el.dataset.colId=colId;
+  el.dataset.libId=libId;
+  el.draggable=isDirector();
+  el.style.borderLeftColor=card.color||'#4fc3f7';
+  const face=document.createElement('div');
+  face.className='card-face';
+  const dot=document.createElement('div');
+  dot.className='card-color-dot';
+  dot.style.background=card.color||'#4fc3f7';
+  const content=document.createElement('div');
+  content.className='card-content';
+  const title=document.createElement('div');
+  title.className='card-title';
+  title.textContent=card.title||'Untitled Task';
+  const meta=document.createElement('div');
+  meta.className='card-meta';
+  if(card.priority&&card.priority!=='none'){
+    const p=document.createElement('span');
+    p.className=`badge badge-priority-${card.priority}`;
+    p.textContent=card.priority;
+    meta.appendChild(p);
+  }
+  if(card.date){
+    const d=document.createElement('span');
+    d.className='badge badge-date';
+    d.textContent=formatDate(card.date);
+    meta.appendChild(d);
+  }
+  if(card.freq){
+    const f=document.createElement('span');
+    f.className='badge badge-freq';
+    f.textContent=card.freq;
+    meta.appendChild(f);
+  }
+  content.appendChild(title);
+  if(meta.children.length) content.appendChild(meta);
+  const expandBtn=document.createElement('button');
+  expandBtn.className='card-expand-btn';
+  expandBtn.innerHTML='▾';
+  face.appendChild(dot);
+  face.appendChild(content);
+  face.appendChild(expandBtn);
+  const detail=document.createElement('div');
+  detail.className='card-detail';
+  const descDiv=document.createElement('div');
+  descDiv.style.marginBottom='8px';
+  descDiv.innerHTML=escapeHtml(card.desc||'No description.');
+  const detailActions=document.createElement('div');
+  detailActions.className='card-detail-actions';
+  const editBtn=document.createElement('button');
+  editBtn.className='btn btn-ghost btn-sm';
+  editBtn.textContent='Edit';
+  editBtn.onclick=e=>{e.stopPropagation();openEditCard(libId,colId,card.id);};
+  const delBtn=document.createElement('button');
+  delBtn.className='btn btn-danger btn-sm';
+  delBtn.textContent='Delete';
+  delBtn.onclick=e=>{e.stopPropagation();deleteCard(libId,colId,card.id);};
+  detailActions.appendChild(editBtn);
+  detailActions.appendChild(delBtn);
+  detail.appendChild(descDiv);
+  detail.appendChild(detailActions);
+  expandBtn.onclick=e=>{
+    e.stopPropagation();
+    const open=detail.classList.contains('open');
+    detail.classList.toggle('open',!open);
+    expandBtn.innerHTML=open?'▾':'▴';
+  };
+  el.appendChild(face);
+  el.appendChild(detail);
+  return el;
+}
+
+// ═══ DRAG & DROP ═══
+let dragCard=null, dragColId=null, dragLibId=null;
+function initDragDrop(scope, libId){
+  scope.querySelectorAll('.card').forEach(c=>{
+    c.addEventListener('dragstart', onDragStart);
+    c.addEventListener('dragend', onDragEnd);
+  });
+  scope.querySelectorAll('.cards-container').forEach(c=>{
+    c.addEventListener('dragover', onDragOver);
+    c.addEventListener('drop', e=>onDrop(e,libId));
+    c.addEventListener('dragleave', onDragLeave);
+  });
+}
+function onDragStart(e){
+  dragCard=e.currentTarget;
+  dragColId=dragCard.dataset.colId;
+  dragLibId=dragCard.dataset.libId;
+  setTimeout(()=>dragCard.classList.add('dragging'),0);
+  e.dataTransfer.effectAllowed='move';
+}
+function onDragEnd(){
+  if(dragCard) dragCard.classList.remove('dragging');
+  document.querySelectorAll('.cards-container').forEach(c=>c.classList.remove('drag-over'));
+  dragCard=null; dragColId=null; dragLibId=null;
+}
+function onDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect='move';
+  const container=e.currentTarget;
+  container.classList.add('drag-over');
+  const after=getDragAfter(container,e.clientY);
+  if(after==null) container.appendChild(dragCard);
+  else container.insertBefore(dragCard,after);
+}
+function onDragLeave(e){ e.currentTarget.classList.remove('drag-over'); }
+function onDrop(e,libId){
+  e.preventDefault();
+  const container=e.currentTarget;
+  container.classList.remove('drag-over');
+  const newColId=container.dataset.colId;
+  if(!dragCard) return;
+  const cardId=dragCard.dataset.cardId;
+  const oldColId=dragColId;
+  const lib=state.libraries[libId];
+  const oldCol=lib.columns.find(c=>c.id===oldColId);
+  const newCol=lib.columns.find(c=>c.id===newColId);
+  if(!oldCol||!newCol) return;
+  const idx=oldCol.cards.findIndex(c=>c.id===cardId);
+  if(idx===-1) return;
+  const [cardData]=oldCol.cards.splice(idx,1);
+  newCol.sort='manual';
+  const domOrder=[...container.querySelectorAll('.card')];
+  const newIndex=domOrder.findIndex(el=>el.dataset.cardId===cardId);
+  if(newIndex>=0&&newIndex<=newCol.cards.length) newCol.cards.splice(newIndex,0,cardData);
+  else newCol.cards.push(cardData);
+  newCol.cards.forEach((c,i)=>c.manualOrder=i);
+  oldCol.cards.forEach((c,i)=>c.manualOrder=i);
+  save();
+  setTimeout(()=>{
+    if(document.getElementById('page-command').classList.contains('active')) renderCommandBoard(libId);
+    else if(currentStaffId) openStaffTasks(libId,currentStaffId);
+  },50);
+}
+function getDragAfter(container,y){
+  const els=[...container.querySelectorAll('.card:not(.dragging)')];
+  return els.reduce((closest,child)=>{
+    const box=child.getBoundingClientRect();
+    const offset=y-box.top-box.height/2;
+    if(offset<0&&offset>closest.offset) return{offset,element:child};
+    return closest;
+  },{offset:Number.NEGATIVE_INFINITY}).element;
+}
+
+// ═══ STAFF MODAL ═══
+let editingStaffLib=null, editingStaffId=null, staffCallback=null;
+let selStaffColor=OUTLOOK_COLORS[7].hex;
+window.openAddStaff = function(libId, cb){
+  editingStaffLib=libId; editingStaffId=null; staffCallback=cb||null;
+  selStaffColor=OUTLOOK_COLORS[7].hex;
+  document.getElementById('staffName').value='';
+  document.getElementById('staffModalTitle').textContent='Add Staff Member';
+  document.getElementById('staffSaveBtn').textContent='Add';
+  buildColorGrid('staffColorGrid',OUTLOOK_COLORS,selStaffColor,hex=>selStaffColor=hex);
+  openModal('staffModal');
+  setTimeout(()=>document.getElementById('staffName').focus(),50);
+};
+window.openEditStaff = function(libId,colId){
+  const col=state.libraries[libId].columns.find(c=>c.id===colId);
+  if(!col) return;
+  editingStaffLib=libId; editingStaffId=colId; staffCallback=null;
+  selStaffColor=col.color;
+  document.getElementById('staffName').value=col.name;
+  document.getElementById('staffModalTitle').textContent='Edit Staff Member';
+  document.getElementById('staffSaveBtn').textContent='Save';
+  buildColorGrid('staffColorGrid',OUTLOOK_COLORS,selStaffColor,hex=>selStaffColor=hex);
+  openModal('staffModal');
+};
+window.saveStaff = function(){
+  const name=document.getElementById('staffName').value.trim();
+  if(!name){toast('Please enter a name.');return;}
+  const lib=state.libraries[editingStaffLib];
+  if(editingStaffId){
+    const col=lib.columns.find(c=>c.id===editingStaffId);
+    col.name=name; col.color=selStaffColor;
+  } else {
+    lib.columns.push({id:uid(),name,color:selStaffColor,sort:'manual',cards:[]});
+  }
+  save(); closeModal('staffModal');
+  if(staffCallback) staffCallback();
+  else renderAdmin();
+};
+window.removeColumn = function(libId,colId){
+  const col=state.libraries[libId].columns.find(c=>c.id===colId);
+  if(!confirm(`Remove "${col?.name}" and all their tasks?`)) return;
+  state.libraries[libId].columns=state.libraries[libId].columns.filter(c=>c.id!==colId);
+  save(); renderAdmin();
+};
+
+// ═══ CARD MODAL ═══
+let editingCardLib=null, editingCardColId=null, editingCardId=null;
+let selCardColor=CARD_COLORS[0];
+window.openAddCard = function(libId,colId){
+  editingCardLib=libId; editingCardColId=colId; editingCardId=null;
+  selCardColor=CARD_COLORS[0];
+  document.getElementById('cardTitle').value='';
+  document.getElementById('cardDesc').value='';
+  document.getElementById('cardPriority').value='none';
+  document.getElementById('cardDate').value='';
+  document.getElementById('cardFreq').value='';
+  document.getElementById('cardModalTitle').textContent='Add Task';
+  document.getElementById('cardSaveBtn').textContent='Add Task';
+  buildColorGrid('cardColorGrid',CARD_COLORS,selCardColor,hex=>selCardColor=hex);
+  openModal('cardModal');
+  setTimeout(()=>document.getElementById('cardTitle').focus(),50);
+};
+window.openEditCard = function(libId,colId,cardId){
+  const col=state.libraries[libId].columns.find(c=>c.id===colId);
+  const card=col?.cards.find(c=>c.id===cardId);
+  if(!card) return;
+  editingCardLib=libId; editingCardColId=colId; editingCardId=cardId;
+  selCardColor=card.color||CARD_COLORS[0];
+  document.getElementById('cardTitle').value=card.title;
+  document.getElementById('cardDesc').value=card.desc||'';
+  document.getElementById('cardPriority').value=card.priority||'none';
+  document.getElementById('cardDate').value=card.date||'';
+  document.getElementById('cardFreq').value=card.freq||'';
+  document.getElementById('cardModalTitle').textContent='Edit Task';
+  document.getElementById('cardSaveBtn').textContent='Save Changes';
+  buildColorGrid('cardColorGrid',CARD_COLORS,selCardColor,hex=>selCardColor=hex);
+  openModal('cardModal');
+  setTimeout(()=>document.getElementById('cardTitle').focus(),50);
+};
+window.saveCard = function(){
+  const title=document.getElementById('cardTitle').value.trim();
+  if(!title){toast('Title is required.');return;}
+  const col=state.libraries[editingCardLib].columns.find(c=>c.id===editingCardColId);
+  if(!col) return;
+  if(editingCardId){
+    const card=col.cards.find(c=>c.id===editingCardId);
+    card.title=title;
+    card.desc=document.getElementById('cardDesc').value.trim();
+    card.priority=document.getElementById('cardPriority').value;
+    card.date=document.getElementById('cardDate').value;
+    card.freq=document.getElementById('cardFreq').value;
+    card.color=selCardColor;
+  } else {
+    col.cards.push({id:uid(),title,
+      desc:document.getElementById('cardDesc').value.trim(),
+      priority:document.getElementById('cardPriority').value,
+      date:document.getElementById('cardDate').value,
+      freq:document.getElementById('cardFreq').value,
+      color:selCardColor,manualOrder:col.cards.length});
+  }
+  save(); closeModal('cardModal');
+  if(document.getElementById('page-command').classList.contains('active')) renderCommandBoard(editingCardLib);
+  else if(currentStaffId) openStaffTasks(editingCardLib,currentStaffId);
+};
+window.deleteCard = function(libId,colId,cardId){
+  if(!confirm('Delete this task?')) return;
+  const col=state.libraries[libId].columns.find(c=>c.id===colId);
+  col.cards=col.cards.filter(c=>c.id!==cardId);
+  save();
+  if(document.getElementById('page-command').classList.contains('active')) renderCommandBoard(libId);
+  else if(currentStaffId) openStaffTasks(libId,currentStaffId);
+};
+
+// ═══ HELPERS ═══
+function buildColorGrid(containerId,palette,selectedHex,onSelect){
+  const grid=document.getElementById(containerId);
+  grid.innerHTML='';
+  palette.forEach(item=>{
+    const hex=typeof item==='string'?item:item.hex;
+    const name=typeof item==='string'?hex:item.name;
+    const sw=document.createElement('div');
+    sw.className='color-swatch'+(hex===selectedHex?' selected':'');
+    sw.style.background=hex;
+    sw.title=name;
+    sw.onclick=()=>{ grid.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('selected')); sw.classList.add('selected'); onSelect(hex); };
+    grid.appendChild(sw);
+  });
+}
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+window.closeModal = closeModal;
+document.querySelectorAll('.modal-overlay').forEach(ov=>{
+  ov.addEventListener('click',e=>{ if(e.target===ov) closeModal(ov.id); });
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>closeModal(m.id));
+});
+function formatDate(d){ if(!d)return''; const[y,m,day]=d.split('-'); return`${m}/${day}/${y.slice(2)}`; }
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+function hexToRgb(hex){ const r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return r?{r:parseInt(r[1],16),g:parseInt(r[2],16),b:parseInt(r[3],16)}:null; }
+function uid(){ return Math.random().toString(36).slice(2,10); }
+
+let toastTimer;
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),2500); }
+window.toast = toast;
+
+window.exportData = function(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`libraries-dashboard-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  toast('Board exported!');
+};
+window.importData = function(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(!d.libraries) throw new Error('bad format');
+      if(!confirm('Replace current board with imported data?')) return;
+      state=d;
+      LIBRARIES.forEach(l=>{ if(!state.libraries[l.id]) state.libraries[l.id]={columns:[]}; });
+      save(); window.goHome(); toast('Board imported!');
+    }catch{ toast('Import failed: invalid file.'); }
+  };
+  reader.readAsText(file); e.target.value='';
+};
+
+</script>
+</body>
+</html>
