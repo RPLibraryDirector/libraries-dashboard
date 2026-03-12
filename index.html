@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>USAG Libraries — Operations Dashboard</title>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="googlebot" content="noindex, nofollow">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -780,6 +782,164 @@ body::before{
 ::-webkit-scrollbar-track{background:var(--surface2);}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 ::-webkit-scrollbar-thumb:hover{background:var(--text-muted);}
+
+/* ═══ ANNOUNCEMENTS ═══ */
+.announcements-section{width:100%;margin-bottom:32px;}
+.ann-list{display:flex;flex-direction:column;gap:10px;}
+.ann-card{
+  border-radius:8px;padding:14px 18px;
+  border-left:4px solid var(--accent);
+  background:rgba(0,142,206,.06);
+  border:1px solid rgba(0,142,206,.2);
+  border-left:4px solid var(--accent);
+  position:relative;
+}
+.ann-card.ann-urgent{
+  background:rgba(238,52,36,.05);
+  border-color:rgba(238,52,36,.25);
+  border-left-color:var(--danger);
+}
+.ann-card.ann-gold{
+  background:rgba(254,195,28,.06);
+  border-color:rgba(254,195,28,.3);
+  border-left-color:var(--gold);
+}
+.ann-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px;}
+.ann-badge{
+  font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;padding:2px 7px;
+  border-radius:3px;background:var(--accent);color:#fff;flex-shrink:0;margin-top:2px;
+}
+.ann-badge.badge-urgent{background:var(--danger);}
+.ann-badge.badge-info{background:var(--accent);}
+.ann-badge.badge-notice{background:var(--gold);color:#1a2233;}
+.ann-title{
+  font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;
+  letter-spacing:1px;color:var(--text);flex:1;
+}
+.ann-meta{font-size:11px;color:var(--text-muted);margin-bottom:4px;letter-spacing:.5px;}
+.ann-body{font-size:13px;color:var(--text-dim);line-height:1.6;}
+.ann-actions{display:flex;gap:6px;margin-top:10px;}
+.ann-section-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
+}
+.ann-section-header h3{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);
+}
+/* Archive page list */
+.ann-archive-list{display:flex;flex-direction:column;gap:8px;}
+.ann-archive-item{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:14px 18px;
+  display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;
+}
+.ann-archive-lib-tag{
+  font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  font-family:'Rajdhani',sans-serif;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:3px;padding:1px 6px;color:var(--text-muted);display:inline-block;margin-right:6px;
+}
+.ann-lib-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.ann-lib-btn{
+  padding:4px 12px;border-radius:20px;border:1px solid var(--border);
+  background:var(--surface);font-family:'Rajdhani',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-muted);cursor:pointer;transition:all .15s;
+}
+.ann-lib-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+/* ═══ STATS PAGE ═══ */
+#page-stats .page-body{flex:1;overflow:auto;padding:28px 32px;display:flex;flex-direction:column;gap:0;}
+.stats-lib-picker{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.stats-lib-btn{
+  padding:6px 16px;border-radius:20px;border:1px solid var(--border);
+  background:var(--surface);font-family:'Rajdhani',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-muted);cursor:pointer;transition:all .15s;
+}
+.stats-lib-btn.active{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+.stats-period-row{display:flex;align-items:center;gap:10px;margin-bottom:24px;flex-wrap:wrap;}
+.stats-period-select{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text);padding:6px 12px;font-size:13px;
+  font-family:'Source Sans 3',sans-serif;outline:none;cursor:pointer;
+}
+.stats-period-select:focus{border-color:var(--accent);}
+.stats-section{margin-bottom:32px;}
+.stats-section-title{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;color:var(--accent2);
+  border-bottom:2px solid var(--accent);padding-bottom:6px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.stats-grid{
+  display:grid;gap:10px;
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:16px 14px;
+  box-shadow:0 1px 4px rgba(0,0,0,.05);
+  display:flex;flex-direction:column;gap:4px;
+  transition:border-color .15s,box-shadow .15s;
+  position:relative;overflow:hidden;
+}
+.stat-card:hover{border-color:var(--border2);}
+.stat-card.editable:hover{border-color:var(--accent);cursor:default;}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--accent);opacity:.5;
+}
+.stat-card.cat-patron::before{background:#008ece;}
+.stat-card.cat-programs::before{background:#b2d234;}
+.stat-card.cat-collections::before{background:#e37e26;}
+.stat-card.cat-tech::before{background:#854686;}
+.stat-card.cat-print::before{background:#0a569b;}
+.stat-card.cat-outreach::before{background:#fec31c;}
+.stat-icon{font-size:22px;margin-bottom:2px;}
+.stat-label{
+  font-size:11px;color:var(--text-muted);font-weight:600;
+  text-transform:uppercase;letter-spacing:.5px;
+  font-family:'Rajdhani',sans-serif;line-height:1.3;
+}
+.stat-value{
+  font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;
+  color:var(--text);line-height:1;cursor:pointer;
+  border-radius:4px;padding:2px 4px;margin:-2px -4px;
+  transition:background .15s;
+  display:inline-block;
+}
+.stat-value:hover{background:rgba(0,142,206,.08);}
+.stat-value-input{
+  font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;
+  color:var(--text);width:100%;background:rgba(0,142,206,.08);
+  border:1px solid var(--accent);border-radius:4px;
+  padding:1px 4px;outline:none;
+}
+.stat-note{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.stats-edit-toggle{margin-left:auto;}
+.stats-empty{
+  text-align:center;padding:48px;color:var(--text-muted);font-size:14px;
+}
+.stats-highlight-row{
+  display:grid;gap:10px;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  margin-bottom:14px;
+}
+.stat-highlight-card{
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  border-radius:8px;padding:18px 16px;color:#fff;
+  box-shadow:0 4px 12px rgba(0,84,157,.2);
+}
+.stat-highlight-card .stat-label{color:rgba(255,255,255,.8);}
+.stat-highlight-card .stat-value{color:#fff;}
+.stat-highlight-card .stat-value:hover{background:rgba(255,255,255,.1);}
+.stat-highlight-card::before{display:none;}
+
+/* ═══ MODAL ANNOUNCEMENT ═══ */
+.form-group select[id="annLibTarget"] option{background:var(--surface);}
+
 </style>
 </head>
 <body>
@@ -823,6 +983,18 @@ body::before{
     <div class="landing-inner">
       <div class="landing-title">Operations <span>Dashboard</span></div>
       <div class="landing-sub">USAG Kaiserslautern — Library Network</div>
+
+      <!-- ═══ ANNOUNCEMENTS PANEL ═══ -->
+      <div class="announcements-section" id="landing-announcements-wrap">
+        <div class="ann-section-header">
+          <h3>📢 Announcements</h3>
+          <button class="btn btn-primary btn-sm" id="btn-post-announcement" style="display:none" onclick="openAddAnnouncement()">+ Post Announcement</button>
+        </div>
+        <div class="ann-list" id="landing-ann-list">
+          <div style="color:var(--text-muted);font-size:13px;text-align:center;padding:16px 0;">No active announcements.</div>
+        </div>
+      </div>
+
       <div class="mode-row" id="mode-row">
         <div class="mode-card" id="card-command" onclick="openModePicker('command')">
           <div class="mode-icon">🗂</div>
@@ -864,6 +1036,16 @@ body::before{
             <div style="font-size:24px;margin-bottom:8px;">📅</div>
             <div class="lib-card-name">Schedule</div>
             <div class="lib-card-count">Desk Coverage</div>
+          </div>
+          <div class="lib-card" onclick="goStats()">
+            <div style="font-size:24px;margin-bottom:8px;">📊</div>
+            <div class="lib-card-name">Stats</div>
+            <div class="lib-card-count">Library Metrics</div>
+          </div>
+          <div class="lib-card" onclick="goPage('page-announcements')">
+            <div style="font-size:24px;margin-bottom:8px;">📢</div>
+            <div class="lib-card-name">Announcements</div>
+            <div class="lib-card-count">Archive & Post</div>
           </div>
         </div>
       </div>
@@ -1167,13 +1349,25 @@ body::before{
     <div class="form-row">
       <div class="form-group">
         <label>Category</label>
-        <select id="contactCategory">
-          <option value="general">General</option>
-          <option value="dod-library">DOD Library (ILL)</option>
-          <option value="military">Military / Command</option>
-          <option value="vendor">Vendor / Supplier</option>
-          <option value="facility">Facility / Support</option>
+        <select id="contactCategory" onchange="toggleCustomCat(this.value)">
+          <option value="military-libraries">Military Libraries</option>
+          <option value="civilian-libraries">Civilian Libraries</option>
+          <option value="volunteers">Volunteers</option>
+          <option value="garrison">Local Garrison Functions</option>
+          <option value="mwr">Local MWR Facilities / Offices</option>
+          <option value="acs">Army Community Service (ACS)</option>
+          <option value="schools-youth">Schools & Youth Services</option>
+          <option value="chaplain">Chaplain & Religious Support</option>
+          <option value="vendors">Vendors & Suppliers</option>
+          <option value="dod-ill">DOD Libraries (ILL Partners)</option>
+          <option value="__custom__">＋ Custom…</option>
         </select>
+        <div id="customCatWrap" style="display:none;margin-top:6px;position:relative;">
+          <input type="text" id="contactCustomCat" placeholder="Type or pick an existing custom category"
+            style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:9px 12px;font-size:14px;font-family:'Source Sans 3',sans-serif;outline:none;"
+            oninput="showCatSuggestions(this.value)" onblur="hideCatSuggestions()" autocomplete="off">
+          <div id="catSuggestions" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--surface);border:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius);z-index:200;max-height:160px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.1);"></div>
+        </div>
       </div>
       <div class="form-group">
         <label>Notes</label>
@@ -1276,6 +1470,86 @@ body::before{
 
 
 
+<!-- ═══ ANNOUNCEMENTS PAGE ═══ -->
+<div class="page with-nav" id="page-announcements">
+  <div class="site-header">
+    <div class="logo" onclick="goHome()">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb">
+      <span class="crumb" onclick="goHome()">Home</span>
+      <span class="sep">›</span>
+      <span class="active">Announcements</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="btn btn-ghost btn-sm" onclick="goHome()">← Back</button>
+  </div>
+  <div class="page-body" id="announcements-body"></div>
+</div>
+
+<!-- ═══ STATS PAGE ═══ -->
+<div class="page with-nav" id="page-stats">
+  <div class="site-header">
+    <div class="logo" onclick="goHome()">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb">
+      <span class="crumb" onclick="goHome()">Home</span>
+      <span class="sep">›</span>
+      <span class="active" id="stats-breadcrumb">Library Statistics</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="btn btn-ghost btn-sm" onclick="goHome()">← Back</button>
+  </div>
+  <div class="page-body" id="stats-body"></div>
+</div>
+
+<!-- ═══ ANNOUNCEMENT MODAL ═══ -->
+<div class="modal-overlay" id="annModal">
+  <div class="modal modal-wide">
+    <h2 id="annModalTitle">Post Announcement</h2>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" id="annTitle" placeholder="Brief announcement title" maxlength="80">
+    </div>
+    <div class="form-group">
+      <label>Body</label>
+      <textarea id="annBody" placeholder="Full text of the announcement…" style="min-height:100px;"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Type</label>
+        <select id="annType">
+          <option value="info">Info</option>
+          <option value="notice">Notice</option>
+          <option value="urgent">Urgent</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Visible To</label>
+        <select id="annLibTarget">
+          <option value="all">All Libraries</option>
+          <option value="kleber">Kleber Branch Library</option>
+          <option value="landstuhl">Landstuhl Library</option>
+          <option value="baumholder">Baumholder Library</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Post Date</label>
+        <input type="date" id="annStartDate">
+      </div>
+      <div class="form-group">
+        <label>Expires (highlight ends)</label>
+        <input type="date" id="annEndDate">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('annModal')">Cancel</button>
+      <button class="btn btn-primary" id="annSaveBtn" onclick="saveAnnouncement()">Post</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <!-- ═══ FIREBASE SDK ═══ -->
@@ -1339,11 +1613,12 @@ const FREQ_ORDER  = {Daily:0,Weekly:1,'Bi-Weekly':2,Monthly:3,Quarterly:4,Annual
 const PRIO_ORDER  = {high:0,medium:1,low:2,none:3};
 
 // ═══ STATE ═══
-let state = { libraries:{}, contacts:[], documents:[], wiki:{}, lexicon:[], schedule:{} };
+let state = { libraries:{}, contacts:[], documents:[], wiki:{}, lexicon:[], schedule:{}, announcements:[], stats:{} };
 LIBRARIES.forEach(l => {
   state.libraries[l.id] = { columns:[] };
   state.wiki[l.id] = [];
   state.schedule[l.id] = { weeks:[] };
+  state.stats[l.id] = {};
 });
 let currentUser = null;
 let currentLibId = null; // library this user is locked to (null = admin sees all)
@@ -1438,9 +1713,12 @@ async function subscribeToData() {
             if(!state.lexicon) state.lexicon = [];
             if(!state.wiki) state.wiki = {};
             if(!state.schedule) state.schedule = {};
+            if(!state.announcements) state.announcements = [];
+            if(!state.stats) state.stats = {};
             LIBRARIES.forEach(l => {
               if(!state.wiki[l.id]) state.wiki[l.id] = [];
               if(!state.schedule[l.id]) state.schedule[l.id] = { weeks: [] };
+              if(!state.stats[l.id]) state.stats[l.id] = {};
             });
             // Re-render current view if already on a page
             if(document.getElementById('page-command').classList.contains('active') && currentLib) {
@@ -1450,11 +1728,12 @@ async function subscribeToData() {
         }
       } else {
         // First run — initialize empty state
-        state = { libraries:{}, contacts:[], documents:[], wiki:{}, lexicon:[], schedule:{} };
+        state = { libraries:{}, contacts:[], documents:[], wiki:{}, lexicon:[], schedule:{}, announcements:[], stats:{} };
         LIBRARIES.forEach(l => {
           state.libraries[l.id] = { columns:[] };
           state.wiki[l.id] = [];
           state.schedule[l.id] = { weeks:[] };
+          state.stats[l.id] = {};
         });
       }
       if(!resolved){ resolved=true; resolve(); }
@@ -1491,6 +1770,11 @@ function applyRoleUI(){
     const el = document.getElementById(id);
     if(el) el.style.display = director ? '' : 'none';
   });
+  // Announcement post button (director only)
+  const annBtn = document.getElementById('btn-post-announcement');
+  if(annBtn) annBtn.style.display = director ? '' : 'none';
+  // Render landing announcements
+  renderLandingAnnouncements();
 }
 
 function showPage(id){
@@ -1621,6 +1905,8 @@ function renderStaffPicker(libId){
     const grid = document.createElement('div');
     grid.className='staff-grid';
     lib.columns.filter(col => col.id !== UNASSIGNED_ID).forEach(col=>{
+      const btn = document.createElement('button');
+      btn.className='staff-pick-btn';
       btn.style.borderColor = col.color+'55';
       btn.innerHTML=`
         <div class="spb-dot" style="background:${col.color}"></div>
@@ -1691,6 +1977,8 @@ function renderAdmin(){
       list.appendChild(empty);
     } else {
       lib.columns.filter(col => col.id !== UNASSIGNED_ID).forEach(col=>{
+        const chip = document.createElement('div');
+        chip.className='admin-staff-chip';
         chip.innerHTML=`
           <div class="admin-chip-dot" style="background:${col.color}"></div>
           <div class="admin-chip-name">${col.name}</div>
@@ -2096,10 +2384,17 @@ window.goWiki = function() {
   renderWikiPage();
   showPage('page-wiki');
 };
+window.goStats = function() {
+  if(currentLibId) { currentStatsLib = currentLibId; }
+  else { currentStatsLib = LIBRARIES[0].id; }
+  renderStatsPage();
+  showPage('page-stats');
+};
 function renderPage(pageId) {
   if(pageId === 'page-contacts') renderContacts();
   else if(pageId === 'page-documents') renderDocuments();
   else if(pageId === 'page-lexicon') renderLexicon();
+  else if(pageId === 'page-announcements') renderAnnouncementsPage();
 }
 
 // ═══ UNASSIGNED COLUMN ═══
@@ -2152,17 +2447,40 @@ function renderContacts() {
   );
 
   // Group by category
-  const cats = ['dod-library','military','vendor','facility','general'];
-  const catLabels = {'dod-library':'DOD Libraries (ILL)','military':'Military / Command','vendor':'Vendors & Suppliers','facility':'Facilities & Support','general':'General'};
+  const FIXED_CATS = ['military-libraries','civilian-libraries','dod-ill','garrison','mwr','acs','schools-youth','chaplain','vendors'];
+  const catLabels = {
+    'military-libraries':'Military Libraries',
+    'civilian-libraries':'Civilian Libraries',
+    'dod-ill':'DOD Libraries (ILL Partners)',
+    'garrison':'Local Garrison Functions',
+    'mwr':'Local MWR Facilities / Offices',
+    'acs':'Army Community Service (ACS)',
+    'schools-youth':'Schools & Youth Services',
+    'chaplain':'Chaplain & Religious Support',
+    'vendors':'Vendors & Suppliers',
+  };
+  // Collect any custom categories from data (not in fixed list)
+  const LEGACY_MAP = { 'general':'general','dod-library':'dod-ill','military':'garrison','vendor':'vendors','facility':'garrison' };
+  const customCats = [...new Set(
+    filtered.map(c => {
+      const raw = c.category || 'general';
+      return LEGACY_MAP[raw] || raw;
+    }).filter(cat => !FIXED_CATS.includes(cat))
+  )].sort();
+  const cats = [...FIXED_CATS, ...customCats];
+
   const grid = document.createElement('div');
   grid.className = 'contacts-grid';
 
   cats.forEach(cat => {
-    const group = filtered.filter(c => (c.category||'general') === cat);
+    const group = filtered.filter(c => {
+      const cc = c.category || 'general';
+      return (LEGACY_MAP[cc] || cc) === cat;
+    });
     if(!group.length) return;
     const catHeader = document.createElement('div');
     catHeader.style.cssText = 'font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);padding-bottom:6px;margin:16px 0 8px;';
-    catHeader.textContent = catLabels[cat];
+    catHeader.textContent = catLabels[cat] || cat;
     grid.appendChild(catHeader);
     group.forEach(contact => grid.appendChild(buildContactCard(contact)));
   });
@@ -2214,7 +2532,7 @@ function buildContactCard(contact) {
     editBtn.onclick = () => openEditContact(contact.id);
     const delBtn = document.createElement('button');
     delBtn.className = 'btn btn-danger btn-sm';
-    delBtn.textContent = '✕';
+    delBtn.textContent = 'Delete';
     delBtn.onclick = () => { if(confirm('Remove this contact?')) { state.contacts = state.contacts.filter(c => c.id !== contact.id); save(); renderContacts(); } };
     actions.append(editBtn, delBtn);
   }
@@ -2246,20 +2564,67 @@ function openEditContact(id) {
   document.getElementById('contactDsn').value = c.dsn||'';
   document.getElementById('contactEmail').value = c.email||'';
   document.getElementById('contactAddress').value = c.address||'';
-  document.getElementById('contactCategory').value = c.category||'general';
   document.getElementById('contactNotes').value = c.notes||'';
+  // Handle custom category
+  const FIXED_CATS = ['military-libraries','civilian-libraries','volunteers','garrison','mwr','acs','schools-youth','chaplain','vendors','dod-ill'];
+  const cat = c.category || 'military-libraries';
+  if(FIXED_CATS.includes(cat)) {
+    document.getElementById('contactCategory').value = cat;
+    document.getElementById('customCatWrap').style.display = 'none';
+    document.getElementById('contactCustomCat').value = '';
+  } else {
+    document.getElementById('contactCategory').value = '__custom__';
+    document.getElementById('customCatWrap').style.display = '';
+    document.getElementById('contactCustomCat').value = cat;
+  }
   document.getElementById('contactModalTitle').textContent = 'Edit Contact';
   document.getElementById('contactSaveBtn').textContent = 'Save';
   openModal('contactModal');
   setTimeout(() => document.getElementById('contactName').focus(), 50);
 }
 function clearContactForm() {
-  ['contactName','contactTitle','contactPhone','contactDsn','contactEmail','contactAddress','contactNotes'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('contactCategory').value = 'general';
+  ['contactName','contactTitle','contactPhone','contactDsn','contactEmail','contactAddress','contactNotes','contactCustomCat'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('contactCategory').value = 'military-libraries';
+  document.getElementById('customCatWrap').style.display = 'none';
 }
+window.toggleCustomCat = function(val) {
+  document.getElementById('customCatWrap').style.display = val === '__custom__' ? '' : 'none';
+  if(val === '__custom__') setTimeout(() => document.getElementById('contactCustomCat').focus(), 50);
+};
+function getCustomCategories() {
+  const FIXED = ['military-libraries','civilian-libraries','volunteers','garrison','mwr','acs','schools-youth','chaplain','vendors','dod-ill'];
+  const custom = new Set();
+  (state.contacts||[]).forEach(c => { if(c.category && !FIXED.includes(c.category)) custom.add(c.category); });
+  return [...custom].sort();
+}
+window.showCatSuggestions = function(val) {
+  const box = document.getElementById('catSuggestions');
+  const q = val.trim().toLowerCase();
+  const matches = getCustomCategories().filter(c => !q || c.toLowerCase().includes(q));
+  if(!matches.length) { box.style.display = 'none'; return; }
+  box.innerHTML = '';
+  matches.forEach(cat => {
+    const item = document.createElement('div');
+    item.style.cssText = 'padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text);transition:background .1s;';
+    item.textContent = cat;
+    item.onmousedown = () => { document.getElementById('contactCustomCat').value = cat; box.style.display = 'none'; };
+    item.onmouseover = () => item.style.background = 'var(--surface2)';
+    item.onmouseout = () => item.style.background = '';
+    box.appendChild(item);
+  });
+  box.style.display = '';
+};
+window.hideCatSuggestions = function() {
+  setTimeout(() => { document.getElementById('catSuggestions').style.display = 'none'; }, 150);
+};
 window.saveContact = function() {
   const name = document.getElementById('contactName').value.trim();
   if(!name) { toast('Name is required.'); return; }
+  let category = document.getElementById('contactCategory').value;
+  if(category === '__custom__') {
+    category = document.getElementById('contactCustomCat').value.trim();
+    if(!category) { toast('Please enter a custom category name.'); return; }
+  }
   const entry = {
     id: editingContactId || uid(),
     name,
@@ -2268,7 +2633,7 @@ window.saveContact = function() {
     dsn: document.getElementById('contactDsn').value.trim(),
     email: document.getElementById('contactEmail').value.trim(),
     address: document.getElementById('contactAddress').value.trim(),
-    category: document.getElementById('contactCategory').value,
+    category,
     notes: document.getElementById('contactNotes').value.trim(),
   };
   if(editingContactId) {
@@ -2338,7 +2703,7 @@ function renderDocuments() {
         editBtn.onclick = e => { e.preventDefault(); openEditDoc(doc.id); };
         const delBtn = document.createElement('button');
         delBtn.className = 'btn btn-danger btn-sm';
-        delBtn.textContent = '✕';
+        delBtn.textContent = 'Delete';
         delBtn.onclick = e => { e.preventDefault(); if(confirm('Remove this link?')) { state.documents = state.documents.filter(d => d.id !== doc.id); save(); renderDocuments(); } };
         actions.append(editBtn, delBtn);
         card.appendChild(actions);
@@ -2475,7 +2840,7 @@ function renderWikiPage() {
       editBtn.onclick = e => { e.stopPropagation(); openEditWikiArticle(currentWikiLib, article.id); };
       const delBtn = document.createElement('button');
       delBtn.className = 'btn btn-danger btn-sm';
-      delBtn.textContent = '✕';
+      delBtn.textContent = 'Delete';
       delBtn.onclick = e => { e.stopPropagation(); if(confirm(`Delete "${article.title}"?`)) { state.wiki[currentWikiLib] = state.wiki[currentWikiLib].filter(a => a.id !== article.id); save(); renderWikiPage(); } };
       actions.append(editBtn, delBtn);
     }
@@ -2604,7 +2969,7 @@ function renderLexicon() {
         editBtn.onclick = () => openEditLexiconEntry(entry.id);
         const delBtn = document.createElement('button');
         delBtn.className = 'btn btn-danger btn-sm';
-        delBtn.textContent = '✕';
+        delBtn.textContent = 'Delete';
         delBtn.onclick = () => { if(confirm(`Delete "${entry.term}"?`)) { state.lexicon = state.lexicon.filter(e => e.id !== entry.id); save(); renderLexicon(); } };
         actions.append(editBtn, delBtn);
       }
@@ -2648,6 +3013,436 @@ window.saveLexiconEntry = function() {
   }
   save(); closeModal('lexiconModal'); renderLexicon();
 };
+
+// ═══ ANNOUNCEMENTS ═══
+let editingAnnId = null;
+
+function getTodayStr() { return new Date().toISOString().slice(0,10); }
+
+function getActiveAnnouncements(libId) {
+  if(!state.announcements) return [];
+  const today = getTodayStr();
+  return state.announcements.filter(a => {
+    if(a.startDate && a.startDate > today) return false;
+    if(a.endDate && a.endDate < today) return false;
+    return a.libTarget === 'all' || a.libTarget === libId || !libId;
+  });
+}
+
+function renderLandingAnnouncements() {
+  const list = document.getElementById('landing-ann-list');
+  if(!list) return;
+  // Determine which library this user "belongs to" for filtering
+  const libId = currentLibId || null; // null = director, show all
+  const anns = libId ? getActiveAnnouncements(libId) : getActiveAnnouncements(null);
+  if(!anns.length) {
+    list.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:16px 0;">No active announcements.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  anns.sort((a,b) => (b.startDate||'').localeCompare(a.startDate||'')).forEach(ann => {
+    list.appendChild(buildAnnCard(ann, false));
+  });
+}
+
+function buildAnnCard(ann, showActions) {
+  const card = document.createElement('div');
+  card.className = 'ann-card' + (ann.type === 'urgent' ? ' ann-urgent' : ann.type === 'notice' ? ' ann-gold' : '');
+  const hdr = document.createElement('div');
+  hdr.className = 'ann-header';
+  const badge = document.createElement('span');
+  badge.className = 'ann-badge badge-' + (ann.type||'info');
+  badge.textContent = (ann.type||'info').toUpperCase();
+  const titleEl = document.createElement('div');
+  titleEl.className = 'ann-title';
+  titleEl.textContent = ann.title || 'Announcement';
+  hdr.append(badge, titleEl);
+  const meta = document.createElement('div');
+  meta.className = 'ann-meta';
+  const libLabel = ann.libTarget === 'all' ? 'All Libraries' : LIBRARIES.find(l=>l.id===ann.libTarget)?.name || ann.libTarget;
+  const expiry = ann.endDate ? ` · Expires ${formatDate(ann.endDate)}` : '';
+  meta.textContent = `Posted ${formatDate(ann.startDate)} · ${libLabel}${expiry}`;
+  const body = document.createElement('div');
+  body.className = 'ann-body';
+  body.textContent = ann.body || '';
+  card.append(hdr, meta, body);
+  if(showActions && isDirector()) {
+    const actions = document.createElement('div');
+    actions.className = 'ann-actions';
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn btn-ghost btn-sm';
+    editBtn.textContent = 'Edit';
+    editBtn.onclick = () => openEditAnnouncement(ann.id);
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn btn-danger btn-sm';
+    delBtn.textContent = 'Delete';
+    delBtn.onclick = () => { if(confirm('Delete this announcement?')) { state.announcements = state.announcements.filter(a => a.id !== ann.id); save(); renderAnnouncementsPage(); renderLandingAnnouncements(); } };
+    actions.append(editBtn, delBtn);
+    card.appendChild(actions);
+  }
+  return card;
+}
+
+function renderAnnouncementsPage() {
+  if(!state.announcements) state.announcements = [];
+  const body = document.getElementById('announcements-body');
+  body.innerHTML = '';
+  const toolbar = document.createElement('div');
+  toolbar.className = 'content-toolbar';
+  const h2 = document.createElement('h2');
+  h2.textContent = 'Announcements';
+  toolbar.appendChild(h2);
+  if(isDirector()) {
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn btn-primary btn-sm';
+    addBtn.textContent = '+ Post Announcement';
+    addBtn.onclick = () => openAddAnnouncement();
+    toolbar.appendChild(addBtn);
+  }
+  body.appendChild(toolbar);
+
+  // Library filter
+  const filterRow = document.createElement('div');
+  filterRow.className = 'ann-lib-filter';
+  const allLibs = [{id:'all', name:'All'},...LIBRARIES.map(l=>({id:l.id, name:l.short}))];
+  let filterLib = '_all';
+  function renderWithFilter() {
+    const list = body.querySelector('.ann-archive-list');
+    if(list) list.remove();
+    const filtered = filterLib === '_all'
+      ? [...state.announcements]
+      : state.announcements.filter(a => a.libTarget === filterLib || a.libTarget === 'all');
+    const sorted = filtered.sort((a,b) => (b.startDate||'').localeCompare(a.startDate||''));
+    const archList = document.createElement('div');
+    archList.className = 'ann-archive-list';
+    if(!sorted.length) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'text-align:center;padding:48px;color:var(--text-muted);font-size:14px;';
+      empty.textContent = 'No announcements found.';
+      archList.appendChild(empty);
+    } else {
+      const today = getTodayStr();
+      sorted.forEach(ann => {
+        const item = document.createElement('div');
+        item.className = 'ann-archive-item';
+        const expired = ann.endDate && ann.endDate < today;
+        const left = document.createElement('div');
+        const titleLine = document.createElement('div');
+        titleLine.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;';
+        const typeBadge = document.createElement('span');
+        typeBadge.className = 'ann-badge badge-' + (ann.type||'info');
+        typeBadge.textContent = (ann.type||'info').toUpperCase();
+        const libTag = document.createElement('span');
+        libTag.className = 'ann-archive-lib-tag';
+        libTag.textContent = ann.libTarget === 'all' ? 'All Libraries' : LIBRARIES.find(l=>l.id===ann.libTarget)?.short || ann.libTarget;
+        if(expired) { const expTag = document.createElement('span'); expTag.className='ann-archive-lib-tag'; expTag.style.color='var(--danger)'; expTag.textContent='Expired'; titleLine.append(typeBadge, libTag, expTag); }
+        else titleLine.append(typeBadge, libTag);
+        const titleEl = document.createElement('div');
+        titleEl.style.cssText = 'font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;color:var(--text);margin-bottom:4px;';
+        titleEl.textContent = ann.title||'—';
+        const bodyEl = document.createElement('div');
+        bodyEl.style.cssText = 'font-size:13px;color:var(--text-dim);line-height:1.5;';
+        bodyEl.textContent = ann.body||'';
+        const metaEl = document.createElement('div');
+        metaEl.className = 'ann-meta';
+        metaEl.style.marginTop = '4px';
+        const exp = ann.endDate ? ` · Expires ${formatDate(ann.endDate)}` : ' · No expiry';
+        metaEl.textContent = `Posted ${formatDate(ann.startDate)}${exp}`;
+        left.append(titleLine, titleEl, bodyEl, metaEl);
+        const right = document.createElement('div');
+        if(isDirector()) {
+          right.style.cssText = 'display:flex;flex-direction:column;gap:6px;flex-shrink:0;';
+          const editBtn = document.createElement('button');
+          editBtn.className = 'btn btn-ghost btn-sm';
+          editBtn.textContent = 'Edit';
+          editBtn.onclick = () => openEditAnnouncement(ann.id);
+          const delBtn = document.createElement('button');
+          delBtn.className = 'btn btn-danger btn-sm';
+          delBtn.textContent = 'Delete';
+          delBtn.onclick = () => { if(confirm('Delete this announcement?')) { state.announcements = state.announcements.filter(a=>a.id!==ann.id); save(); renderAnnouncementsPage(); renderLandingAnnouncements(); } };
+          right.append(editBtn, delBtn);
+        }
+        item.append(left, right);
+        archList.appendChild(item);
+      });
+    }
+    body.appendChild(archList);
+  }
+  [{id:'_all',name:'All'}, ...LIBRARIES.map(l=>({id:l.id,name:l.short}))].forEach(lib => {
+    const btn = document.createElement('button');
+    btn.className = 'ann-lib-btn' + (lib.id === filterLib ? ' active' : '');
+    btn.textContent = lib.name;
+    btn.onclick = () => {
+      filterLib = lib.id;
+      filterRow.querySelectorAll('.ann-lib-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderWithFilter();
+    };
+    filterRow.appendChild(btn);
+  });
+  body.appendChild(filterRow);
+  renderWithFilter();
+}
+
+window.openAddAnnouncement = function() {
+  if(!isDirector()) return;
+  editingAnnId = null;
+  document.getElementById('annTitle').value = '';
+  document.getElementById('annBody').value = '';
+  document.getElementById('annType').value = 'info';
+  document.getElementById('annLibTarget').value = 'all';
+  document.getElementById('annStartDate').value = getTodayStr();
+  document.getElementById('annEndDate').value = '';
+  document.getElementById('annModalTitle').textContent = 'Post Announcement';
+  document.getElementById('annSaveBtn').textContent = 'Post';
+  openModal('annModal');
+  setTimeout(() => document.getElementById('annTitle').focus(), 50);
+};
+
+function openEditAnnouncement(id) {
+  const ann = state.announcements.find(a => a.id === id);
+  if(!ann) return;
+  editingAnnId = id;
+  document.getElementById('annTitle').value = ann.title||'';
+  document.getElementById('annBody').value = ann.body||'';
+  document.getElementById('annType').value = ann.type||'info';
+  document.getElementById('annLibTarget').value = ann.libTarget||'all';
+  document.getElementById('annStartDate').value = ann.startDate||'';
+  document.getElementById('annEndDate').value = ann.endDate||'';
+  document.getElementById('annModalTitle').textContent = 'Edit Announcement';
+  document.getElementById('annSaveBtn').textContent = 'Save Changes';
+  openModal('annModal');
+}
+
+window.saveAnnouncement = function() {
+  const title = document.getElementById('annTitle').value.trim();
+  if(!title) { toast('Title is required.'); return; }
+  const entry = {
+    id: editingAnnId || uid(),
+    title,
+    body: document.getElementById('annBody').value.trim(),
+    type: document.getElementById('annType').value,
+    libTarget: document.getElementById('annLibTarget').value,
+    startDate: document.getElementById('annStartDate').value || getTodayStr(),
+    endDate: document.getElementById('annEndDate').value || '',
+  };
+  if(!state.announcements) state.announcements = [];
+  if(editingAnnId) {
+    const idx = state.announcements.findIndex(a => a.id === editingAnnId);
+    if(idx !== -1) state.announcements[idx] = entry;
+  } else {
+    state.announcements.push(entry);
+  }
+  save(); closeModal('annModal');
+  renderLandingAnnouncements();
+  if(document.getElementById('page-announcements').classList.contains('active')) renderAnnouncementsPage();
+  toast('Announcement saved!');
+};
+
+// ═══ STATS ═══
+let currentStatsLib = null;
+let statsEditMode = false;
+
+const STAT_SECTIONS = [
+  {
+    id:'patron', label:'Patron Services', cat:'cat-patron', icon:'👥',
+    metrics:[
+      {key:'door_count', label:'Door Count', icon:'🚪', note:'Total patron entries'},
+      {key:'reference_questions', label:'Reference Questions', icon:'❓'},
+      {key:'room_reservations', label:'Room Reservations', icon:'🏛'},
+      {key:'guest_group_visits', label:'Guest Group Visits', icon:'🎒'},
+      {key:'facility_hours', label:'Facility Usage Hours', icon:'⏱'},
+    ]
+  },
+  {
+    id:'programs', label:'Programming', cat:'cat-programs', icon:'🎯',
+    metrics:[
+      {key:'total_programs', label:'Total Programs', icon:'📋', note:'All program types combined'},
+      {key:'program_participants', label:'Program Participants', icon:'👤'},
+      {key:'storytimes', label:'Storytimes / Youth Programs', icon:'📚'},
+      {key:'adult_programs', label:'Adult Programs', icon:'🧑'},
+      {key:'displays_total', label:'Total Displays', icon:'🖼'},
+      {key:'interactive_displays', label:'Interactive Display Interactions', icon:'✋'},
+      {key:'outreach_events', label:'Outreach Events', icon:'🏕'},
+    ]
+  },
+  {
+    id:'collections', label:'Collections & ILL', cat:'cat-collections', icon:'📖',
+    metrics:[
+      {key:'checkouts', label:'Checkouts', icon:'📤'},
+      {key:'returns', label:'Returns', icon:'📥'},
+      {key:'renewals', label:'Renewals', icon:'🔄'},
+      {key:'ill_borrowed', label:'ILL — Borrowed', icon:'⬇', note:'Items borrowed from other libraries'},
+      {key:'ill_loaned', label:'ILL — Loaned', icon:'⬆', note:'Items loaned to other libraries'},
+      {key:'new_registrations', label:'New Card Registrations', icon:'🪪'},
+    ]
+  },
+  {
+    id:'tech', label:'Technology Assistance', cat:'cat-tech', icon:'💻',
+    metrics:[
+      {key:'tech_assistance', label:'Technology Assistance Sessions', icon:'🛠'},
+      {key:'computer_sessions', label:'Computer Sessions', icon:'🖥'},
+      {key:'wifi_sessions', label:'WiFi / Hotspot Loans', icon:'📶'},
+    ]
+  },
+  {
+    id:'print', label:'Print & Copy Services', cat:'cat-print', icon:'🖨',
+    metrics:[
+      {key:'print_jobs', label:'Print Jobs', icon:'🖨'},
+      {key:'pages_printed', label:'Pages Printed', icon:'📄'},
+      {key:'pages_scanned', label:'Pages Scanned', icon:'🔍'},
+      {key:'copies_made', label:'Copies Made', icon:'📑'},
+    ]
+  },
+  {
+    id:'outreach', label:'Community Outreach', cat:'cat-outreach', icon:'🌍',
+    metrics:[
+      {key:'social_posts', label:'Social Media Posts', icon:'📱'},
+      {key:'newsletters', label:'Newsletters / Bulletins', icon:'📰'},
+      {key:'community_partnerships', label:'Community Partnerships', icon:'🤝'},
+      {key:'volunteer_hours', label:'Volunteer Hours', icon:'🙋'},
+    ]
+  },
+];
+
+function getStatPeriodKey(period) { return period || 'all'; }
+
+function renderStatsPage() {
+  if(!state.stats) state.stats = {};
+  LIBRARIES.forEach(l => { if(!state.stats[l.id]) state.stats[l.id] = {}; });
+  const body = document.getElementById('stats-body');
+  body.innerHTML = '';
+
+  // Library picker
+  const showPicker = isDirector();
+  if(showPicker) {
+    const picker = document.createElement('div');
+    picker.className = 'stats-lib-picker';
+    LIBRARIES.forEach(lib => {
+      const btn = document.createElement('button');
+      btn.className = 'stats-lib-btn' + (currentStatsLib === lib.id ? ' active' : '');
+      btn.textContent = lib.short;
+      btn.onclick = () => { currentStatsLib = lib.id; statsEditMode = false; renderStatsPage(); };
+      picker.appendChild(btn);
+    });
+    body.appendChild(picker);
+  }
+
+  const libMeta = LIBRARIES.find(l => l.id === currentStatsLib);
+  document.getElementById('stats-breadcrumb').textContent = (libMeta?.name||'') + ' — Statistics';
+
+  // Period selector
+  const periodRow = document.createElement('div');
+  periodRow.className = 'stats-period-row';
+  const periodLabel = document.createElement('div');
+  periodLabel.style.cssText = 'font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);';
+  periodLabel.textContent = 'Period:';
+  const periodSel = document.createElement('select');
+  periodSel.className = 'stats-period-select';
+  const periods = [
+    {val:'fy26', label:'FY 2026'},
+    {val:'q1fy26', label:'Q1 FY26 (Oct–Dec)'},
+    {val:'q2fy26', label:'Q2 FY26 (Jan–Mar)'},
+    {val:'q3fy26', label:'Q3 FY26 (Apr–Jun)'},
+    {val:'q4fy26', label:'Q4 FY26 (Jul–Sep)'},
+    {val:'fy25', label:'FY 2025'},
+    {val:'q1fy25', label:'Q1 FY25'},
+    {val:'q2fy25', label:'Q2 FY25'},
+    {val:'q3fy25', label:'Q3 FY25'},
+    {val:'q4fy25', label:'Q4 FY25'},
+    {val:'all', label:'All-Time / Untracked'},
+  ];
+  if(!window._currentStatPeriod) window._currentStatPeriod = 'fy26';
+  periods.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.val; o.textContent = p.label;
+    if(p.val === window._currentStatPeriod) o.selected = true;
+    periodSel.appendChild(o);
+  });
+  periodSel.onchange = () => { window._currentStatPeriod = periodSel.value; renderStatsPage(); };
+
+  const canEdit = isDirector() || (isLocationUser() && EMAIL_TO_LIB[currentUser.email] === currentStatsLib);
+  const editTog = buildEditToggle(statsEditMode, v => { statsEditMode = v; renderStatsPage(); });
+  editTog.className += ' stats-edit-toggle';
+
+  periodRow.append(periodLabel, periodSel);
+  if(canEdit) periodRow.appendChild(editTog);
+  body.appendChild(periodRow);
+
+  // Instruction when in edit mode
+  if(statsEditMode && canEdit) {
+    const tip = document.createElement('div');
+    tip.style.cssText = 'font-size:12px;color:var(--text-muted);margin-bottom:16px;background:rgba(0,142,206,.06);border:1px solid rgba(0,142,206,.15);border-radius:6px;padding:8px 14px;';
+    tip.textContent = 'Click any number to edit it. Values are saved per library per period.';
+    body.appendChild(tip);
+  }
+
+  const libStatsAll = state.stats[currentStatsLib] || {};
+  const period = window._currentStatPeriod || 'all';
+  const libStats = libStatsAll[period] || {};
+
+  STAT_SECTIONS.forEach(section => {
+    const sec = document.createElement('div');
+    sec.className = 'stats-section';
+    const secTitle = document.createElement('div');
+    secTitle.className = 'stats-section-title';
+    secTitle.innerHTML = `<span>${section.icon} ${section.label}</span>`;
+    sec.appendChild(secTitle);
+    const grid = document.createElement('div');
+    grid.className = 'stats-grid';
+    section.metrics.forEach(metric => {
+      const card = document.createElement('div');
+      card.className = `stat-card ${section.cat}` + (canEdit && statsEditMode ? ' editable' : '');
+      const iconEl = document.createElement('div');
+      iconEl.className = 'stat-icon';
+      iconEl.textContent = metric.icon;
+      const labelEl = document.createElement('div');
+      labelEl.className = 'stat-label';
+      labelEl.textContent = metric.label;
+      const rawVal = libStats[metric.key];
+      const dispVal = (rawVal !== undefined && rawVal !== '') ? rawVal : '—';
+      const valEl = document.createElement('div');
+      valEl.className = 'stat-value';
+      valEl.textContent = dispVal;
+      if(canEdit && statsEditMode) {
+        valEl.title = 'Click to edit';
+        valEl.onclick = () => {
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.className = 'stat-value-input';
+          input.value = (rawVal !== undefined && rawVal !== '') ? rawVal : '';
+          input.min = '0';
+          valEl.replaceWith(input);
+          input.focus();
+          const commit = () => {
+            const newVal = input.value.trim();
+            if(!state.stats[currentStatsLib]) state.stats[currentStatsLib] = {};
+            if(!state.stats[currentStatsLib][period]) state.stats[currentStatsLib][period] = {};
+            if(newVal === '') {
+              delete state.stats[currentStatsLib][period][metric.key];
+            } else {
+              state.stats[currentStatsLib][period][metric.key] = Number(newVal);
+            }
+            save();
+            const updated = document.createElement('div');
+            updated.className = 'stat-value';
+            updated.textContent = newVal === '' ? '—' : Number(newVal).toLocaleString();
+            updated.onclick = valEl.onclick;
+            updated.title = 'Click to edit';
+            input.replaceWith(updated);
+          };
+          input.addEventListener('blur', commit);
+          input.addEventListener('keydown', e => { if(e.key==='Enter') input.blur(); if(e.key==='Escape') { input.value = rawVal||''; input.blur(); } });
+        };
+      }
+      card.append(iconEl, labelEl, valEl);
+      if(metric.note) { const note = document.createElement('div'); note.className='stat-note'; note.textContent=metric.note; card.appendChild(note); }
+      grid.appendChild(card);
+    });
+    sec.appendChild(grid);
+    body.appendChild(sec);
+  });
+}
 
 // ═══ SHARED EDIT TOGGLE BUILDER ═══
 function buildEditToggle(isOn, onChange) {
@@ -3243,6 +4038,21 @@ window.importData = function(e){
   };
   reader.readAsText(file); e.target.value='';
 };
+
+// ═══ ANTI-SCRAPING ═══
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  // Block F12, Ctrl+U (view source), Ctrl+S (save), Ctrl+Shift+I/J/C (devtools)
+  if(e.key === 'F12') e.preventDefault();
+  if(e.ctrlKey && e.key === 'u') e.preventDefault();
+  if(e.ctrlKey && e.key === 's') e.preventDefault();
+  if(e.ctrlKey && e.shiftKey && ['i','I','j','J','c','C'].includes(e.key)) e.preventDefault();
+});
+// Disable text selection on key UI surfaces
+document.querySelectorAll('.site-header,.col-header,.card-meta,.badge,.ann-badge').forEach(el => {
+  el.style.userSelect = 'none';
+});
+
 
 </script>
 </body>
