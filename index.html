@@ -1357,12 +1357,14 @@ window.saveStaff = function(){
   save(); closeModal('staffModal');
   if(staffCallback) staffCallback();
   else renderAdmin();
+  if(document.getElementById('page-command').classList.contains('active') && editingStaffLib === currentLib) renderCommandBoard(editingStaffLib);
 };
 window.removeColumn = function(libId,colId){
   const col=state.libraries[libId].columns.find(c=>c.id===colId);
   if(!confirm(`Remove "${col?.name}" and all their tasks?`)) return;
   state.libraries[libId].columns=state.libraries[libId].columns.filter(c=>c.id!==colId);
   save(); renderAdmin();
+  if(document.getElementById('page-command').classList.contains('active') && libId === currentLib) renderCommandBoard(libId);
 };
 
 // ═══ CARD MODAL ═══
