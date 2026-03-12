@@ -434,9 +434,29 @@ body::before{
 .card-detail{
   padding:8px 12px 10px 29px;font-size:12px;color:var(--text-dim);
   line-height:1.6;display:none;border-top:1px solid var(--border);background:var(--bg);
+  position:relative;
 }
 .card-detail.open{display:block;}
-.card-detail-actions{display:flex;gap:6px;margin-top:8px;}
+.card-detail-actions{
+  display:flex;gap:6px;margin-top:8px;
+  justify-content:flex-end;
+}
+.btn-icon{
+  width:28px;height:28px;border-radius:5px;border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px;line-height:1;
+  transition:all .15s;flex-shrink:0;
+}
+.btn-icon-edit{
+  background:var(--surface3);color:var(--text-dim);
+  border:1px solid var(--border2);
+}
+.btn-icon-edit:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.btn-icon-delete{
+  background:rgba(238,52,36,.1);color:var(--danger);
+  border:1px solid rgba(238,52,36,.3);
+}
+.btn-icon-delete:hover{background:var(--danger);color:#fff;border-color:var(--danger);}
 
 /* ═══ MODALS ═══ */
 .modal-overlay{
@@ -1710,12 +1730,14 @@ function buildCard(card, colId, libId){
   const detailActions=document.createElement('div');
   detailActions.className='card-detail-actions';
   const editBtn=document.createElement('button');
-  editBtn.className='btn btn-ghost btn-sm';
-  editBtn.textContent='Edit';
+  editBtn.className='btn-icon btn-icon-edit';
+  editBtn.innerHTML='✏️';
+  editBtn.title='Edit task';
   editBtn.onclick=e=>{e.stopPropagation();openEditCard(libId,colId,card.id);};
   const delBtn=document.createElement('button');
-  delBtn.className='btn btn-danger btn-sm';
-  delBtn.textContent='Delete';
+  delBtn.className='btn-icon btn-icon-delete';
+  delBtn.innerHTML='🗑';
+  delBtn.title='Delete task';
   delBtn.onclick=e=>{e.stopPropagation();deleteCard(libId,colId,card.id);};
   detailActions.appendChild(editBtn);
   detailActions.appendChild(delBtn);
