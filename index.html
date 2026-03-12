@@ -2760,7 +2760,7 @@ function renderSchedulePage() {
   if(isDirector()) {
     // Dropdown selector
     const sel = document.createElement('select');
-    sel.style.cssText = 'font-family:"Rajdhani",sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px;text-transform:uppercase;border:none;background:transparent;color:var(--text);cursor:pointer;outline:none;padding:0;';
+    sel.style.cssText = 'font-family:"Rajdhani",sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px;text-transform:uppercase;border:none;background:transparent;color:var(--text);cursor:pointer;outline:none;padding:0;width:auto;max-width:260px;';
     LIBRARIES.forEach(lib => {
       const opt = document.createElement('option');
       opt.value = lib.id;
@@ -2939,7 +2939,8 @@ function renderWeekGrid(container, week) {
 
   // Time label column
   const SCHED_HOURS = SCHED_END_H - SCHED_START_H;
-  const totalGridH = SCHED_SLOTS * SCHED_SLOT_H;
+  const PAD_H = Math.round(SCHED_SLOT_H / 3);
+  const totalGridH = SCHED_SLOTS * SCHED_SLOT_H + PAD_H * 2;
   const HDR_H = 24;
 
   const timeCol = document.createElement('div');
@@ -2955,7 +2956,7 @@ function renderWeekGrid(container, week) {
   timeBody.style.cssText = `position:relative;flex:1;height:${totalGridH}px;`;
 
   for(let h = 0; h <= SCHED_HOURS; h++) {
-    const topPx = h * SCHED_SLOT_H * 2; // 2 slots per hour
+    const topPx = PAD_H + h * SCHED_SLOT_H * 2;
     const label = document.createElement('div');
     label.style.cssText = `
       position:absolute;
@@ -2998,25 +2999,32 @@ function renderWeekGrid(container, week) {
   const shifts = week.shifts || [];
   SCHED_DAYS.forEach((_, di) => {
     const col = document.createElement('div');
-    col.style.cssText = 'position:relative;border-right:1px solid var(--border);box-sizing:border-box;';
+    col.style.cssText = `position:relative;height:${totalGridH}px;border-right:1px solid var(--border);box-sizing:border-box;`;
     if(di === 5) col.style.borderRight = 'none';
 
-    // Slot lines
-    const slotWrap = document.createElement('div');
-    slotWrap.style.cssText = 'position:absolute;inset:0;';
+    // Top pad
+    const padTop = document.createElement('div');
+    padTop.style.cssText = `height:${PAD_H}px;box-sizing:border-box;`;
+    col.appendChild(padTop);
+
+    // Slot lines — flow children (NOT absolutely positioned) so they give the col its height
     for(let i = 0; i < SCHED_SLOTS; i++) {
       const isHour = i % 2 === 0;
       const s = document.createElement('div');
-      s.style.cssText = `height:${SCHED_SLOT_H}px;border-bottom:${i===SCHED_SLOTS-1?'none':`1px solid ${isHour?'var(--border2)':'var(--border)'}`};box-sizing:border-box;`;
-      slotWrap.appendChild(s);
+      s.style.cssText = `height:${SCHED_SLOT_H}px;border-bottom:${i===SCHED_SLOTS-1?'none':`1px solid ${isHour?'var(--border)':'var(--border2)'}`};box-sizing:border-box;`;
+      col.appendChild(s);
     }
-    col.appendChild(slotWrap);
 
-    // Shift blocks
+    // Bottom pad
+    const padBot = document.createElement('div');
+    padBot.style.cssText = `height:${PAD_H}px;box-sizing:border-box;`;
+    col.appendChild(padBot);
+
+    // Shift blocks — absolutely positioned, offset by PAD_H
     shifts.filter(s => s.day === di).forEach(s => {
       const staffCol = staffCols.find(c => c.id === s.staffId);
       if(!staffCol) return;
-      const top = s.startSlot * SCHED_SLOT_H;
+      const top = PAD_H + s.startSlot * SCHED_SLOT_H;
       const height = (s.endSlot - s.startSlot) * SCHED_SLOT_H;
       const rgb = hexToRgb(staffCol.color);
       const lum = rgb ? (0.299*rgb.r + 0.587*rgb.g + 0.114*rgb.b)/255 : 1;
@@ -3032,8 +3040,7 @@ function renderWeekGrid(container, week) {
     dayColsRow.appendChild(col);
   });
 
-  // Set explicit height on the cols container
-  dayColsRow.style.height = (SCHED_SLOTS * SCHED_SLOT_H) + 'px';
+  dayColsRow.style.height = totalGridH + 'px';
   daysArea.appendChild(dayColsRow);
   gridOuter.appendChild(daysArea);
   gridWrap.appendChild(gridOuter);
