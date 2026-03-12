@@ -716,6 +716,9 @@ body::before{
 .sched-week-subtitle{font-size:11px;color:var(--text-muted);}
 .sched-week-arrow{font-size:11px;color:var(--text-muted);transition:transform .2s;}
 .sched-week-entry.expanded .sched-week-arrow{transform:rotate(180deg);}
+.sched-week-delete{background:none;border:none;cursor:pointer;font-size:13px;padding:2px 4px;border-radius:4px;opacity:0.3;transition:opacity .15s,background .15s;line-height:1;}
+.sched-week-header:hover .sched-week-delete{opacity:0.7;}
+.sched-week-delete:hover{opacity:1 !important;background:rgba(220,50,50,.12);}
 .sched-week-body{display:none;padding:12px 14px 16px;border-top:1px solid var(--border);background:var(--bg);}
 .sched-week-body.open{display:block;}
 .sched-week-toolbar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px;}
@@ -2660,7 +2663,7 @@ function buildEditToggle(isOn, onChange) {
 const SCHED_DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const SCHED_START_H = 9, SCHED_END_H = 18;
 const SCHED_SLOTS = (SCHED_END_H - SCHED_START_H) * 2; // 30-min slots
-const SCHED_SLOT_H = 38; // px per slot
+const SCHED_SLOT_H = 35; // px per slot
 
 // ISO week number
 function getISOWeek(date) {
@@ -2846,15 +2849,28 @@ function renderSchedulePage() {
           <div>
             <div class="sched-week-title">Week ${w.isoWeek} — ${formatShortDate(w.monday)} to ${formatShortDate(sunday)}</div>
           </div>
-          <span class="sched-week-arrow">▾</span>`;
+          <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+            <button class="sched-week-delete" title="Delete week" data-wid="${w.id}">🗑</button>
+            <span class="sched-week-arrow">▾</span>
+          </div>`;
         const weekBody = document.createElement('div');
         weekBody.className = 'sched-week-body';
         weekBody.id = 'week-body-' + w.id;
-        weekHdr.onclick = () => {
+        weekHdr.onclick = (e) => {
+          if(e.target.closest('.sched-week-delete')) return;
           const open = weekBody.classList.contains('open');
           weekBody.classList.toggle('open', !open);
           weekEntry.classList.toggle('expanded', !open);
           if(!open) renderWeekGrid(weekBody, w);
+        };
+        weekHdr.querySelector('.sched-week-delete').onclick = (e) => {
+          e.stopPropagation();
+          if(!confirm(`Delete Week ${w.isoWeek} (${formatShortDate(w.monday)} – ${formatShortDate(sunday)})?\n\nThis cannot be undone.`)) return;
+          const libData = state.schedule[schedLibId];
+          libData.weeks = libData.weeks.filter(x => x.id !== w.id);
+          save();
+          renderSchedulePage();
+          toast('Week deleted.');
         };
         weekEntry.append(weekHdr, weekBody);
         qBody.appendChild(weekEntry);
@@ -2908,8 +2924,7 @@ function renderWeekGrid(container, week) {
 
   // Time label column
   const SCHED_HOURS = SCHED_END_H - SCHED_START_H;
-  const PAD_H = Math.round(SCHED_SLOT_H / 3); // padding rows top & bottom
-  const totalGridH = SCHED_SLOTS * SCHED_SLOT_H + PAD_H * 2;
+  const totalGridH = SCHED_SLOTS * SCHED_SLOT_H;
   const HDR_H = 24;
 
   const timeCol = document.createElement('div');
@@ -2925,7 +2940,7 @@ function renderWeekGrid(container, week) {
   timeBody.style.cssText = `position:relative;flex:1;height:${totalGridH}px;`;
 
   for(let h = 0; h <= SCHED_HOURS; h++) {
-    const topPx = PAD_H + h * SCHED_SLOT_H * 2; // offset by pad
+    const topPx = h * SCHED_SLOT_H * 2; // 2 slots per hour
     const label = document.createElement('div');
     label.style.cssText = `
       position:absolute;
@@ -2968,32 +2983,25 @@ function renderWeekGrid(container, week) {
   const shifts = week.shifts || [];
   SCHED_DAYS.forEach((_, di) => {
     const col = document.createElement('div');
-    col.style.cssText = `position:relative;height:${totalGridH}px;border-right:1px solid var(--border);box-sizing:border-box;`;
+    col.style.cssText = 'position:relative;border-right:1px solid var(--border);box-sizing:border-box;';
     if(di === 5) col.style.borderRight = 'none';
 
-    // Top padding row — same bg as grid, no border
-    const padTop = document.createElement('div');
-    padTop.style.cssText = `height:${PAD_H}px;box-sizing:border-box;`;
-    col.appendChild(padTop);
-
     // Slot lines
+    const slotWrap = document.createElement('div');
+    slotWrap.style.cssText = 'position:absolute;inset:0;';
     for(let i = 0; i < SCHED_SLOTS; i++) {
       const isHour = i % 2 === 0;
       const s = document.createElement('div');
-      s.style.cssText = `height:${SCHED_SLOT_H}px;border-bottom:${i===SCHED_SLOTS-1?'none':`1px solid ${isHour?'var(--border)':'var(--border2)'}`};box-sizing:border-box;`;
-      col.appendChild(s);
+      s.style.cssText = `height:${SCHED_SLOT_H}px;border-bottom:${i===SCHED_SLOTS-1?'none':`1px solid ${isHour?'var(--border2)':'var(--border)'}`};box-sizing:border-box;`;
+      slotWrap.appendChild(s);
     }
+    col.appendChild(slotWrap);
 
-    // Bottom padding row
-    const padBot = document.createElement('div');
-    padBot.style.cssText = `height:${PAD_H}px;box-sizing:border-box;`;
-    col.appendChild(padBot);
-
-    // Shift blocks — absolutely positioned, offset by PAD_H
+    // Shift blocks
     shifts.filter(s => s.day === di).forEach(s => {
       const staffCol = staffCols.find(c => c.id === s.staffId);
       if(!staffCol) return;
-      const top = PAD_H + s.startSlot * SCHED_SLOT_H;
+      const top = s.startSlot * SCHED_SLOT_H;
       const height = (s.endSlot - s.startSlot) * SCHED_SLOT_H;
       const rgb = hexToRgb(staffCol.color);
       const lum = rgb ? (0.299*rgb.r + 0.587*rgb.g + 0.114*rgb.b)/255 : 1;
@@ -3009,7 +3017,8 @@ function renderWeekGrid(container, week) {
     dayColsRow.appendChild(col);
   });
 
-  dayColsRow.style.height = totalGridH + 'px';
+  // Set explicit height on the cols container
+  dayColsRow.style.height = (SCHED_SLOTS * SCHED_SLOT_H) + 'px';
   daysArea.appendChild(dayColsRow);
   gridOuter.appendChild(daysArea);
   gridWrap.appendChild(gridOuter);
