@@ -749,7 +749,7 @@ body::before{
 .sched-slot.last-slot{border-bottom:none;}
 .sched-block{
   position:absolute;left:1px;right:1px;
-  border-radius:4px;display:flex;align-items:center;justify-content:center;
+  border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;
   letter-spacing:.5px;text-transform:uppercase;
   cursor:pointer;overflow:hidden;text-align:center;
@@ -3032,7 +3032,7 @@ function renderWeekGrid(container, week) {
       const block = document.createElement('button');
       block.className = 'sched-block';
       block.style.cssText = `top:${top}px;height:${height}px;background:${staffCol.color};color:${textColor};`;
-      block.innerHTML = `${staffCol.name}<br><span style="font-size:9px;opacity:.8;font-weight:400;">${slotToTime(s.startSlot)}–${slotToTime(s.endSlot)}</span>`;
+      block.innerHTML = `<span style="line-height:1.1;">${staffCol.name}</span><span style="font-size:8px;opacity:.7;font-weight:400;letter-spacing:.3px;line-height:1.1;">${slotToTime(s.startSlot)}–${slotToTime(s.endSlot)}</span>`;
       if(canEdit) block.onclick = () => openEditShift(week.id, s.id);
       else block.style.cursor = 'default';
       col.appendChild(block);
