@@ -2660,7 +2660,7 @@ function buildEditToggle(isOn, onChange) {
 const SCHED_DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const SCHED_START_H = 9, SCHED_END_H = 18;
 const SCHED_SLOTS = (SCHED_END_H - SCHED_START_H) * 2; // 30-min slots
-const SCHED_SLOT_H = 30; // px per slot
+const SCHED_SLOT_H = 15; // px per slot
 
 // ISO week number
 function getISOWeek(date) {
@@ -2964,24 +2964,22 @@ function renderWeekGrid(container, week) {
   const dayColsRow = document.createElement('div');
   dayColsRow.style.cssText = 'display:grid;grid-template-columns:repeat(6,1fr);flex:1;';
 
+  const colH = SCHED_SLOTS * SCHED_SLOT_H;
   const shifts = week.shifts || [];
   SCHED_DAYS.forEach((_, di) => {
     const col = document.createElement('div');
-    col.style.cssText = 'position:relative;border-right:1px solid var(--border);box-sizing:border-box;';
+    col.style.cssText = `position:relative;height:${colH}px;border-right:1px solid var(--border);box-sizing:border-box;`;
     if(di === 5) col.style.borderRight = 'none';
 
-    // Slot lines
-    const slotWrap = document.createElement('div');
-    slotWrap.style.cssText = 'position:absolute;inset:0;';
+    // Slot lines — use flow layout so they actually fill the column
     for(let i = 0; i < SCHED_SLOTS; i++) {
       const isHour = i % 2 === 0;
       const s = document.createElement('div');
-      s.style.cssText = `height:${SCHED_SLOT_H}px;border-bottom:${i===SCHED_SLOTS-1?'none':`1px solid ${isHour?'var(--border2)':'var(--border)'}`};box-sizing:border-box;`;
-      slotWrap.appendChild(s);
+      s.style.cssText = `height:${SCHED_SLOT_H}px;border-bottom:${i===SCHED_SLOTS-1?'none':`1px solid ${isHour?'var(--border)':'var(--border2)'}`};box-sizing:border-box;`;
+      col.appendChild(s);
     }
-    col.appendChild(slotWrap);
 
-    // Shift blocks
+    // Shift blocks — absolutely positioned over the slot lines
     shifts.filter(s => s.day === di).forEach(s => {
       const staffCol = staffCols.find(c => c.id === s.staffId);
       if(!staffCol) return;
@@ -3001,8 +2999,7 @@ function renderWeekGrid(container, week) {
     dayColsRow.appendChild(col);
   });
 
-  // Set explicit height on the cols container
-  dayColsRow.style.height = (SCHED_SLOTS * SCHED_SLOT_H) + 'px';
+  dayColsRow.style.height = colH + 'px';
   daysArea.appendChild(dayColsRow);
   gridOuter.appendChild(daysArea);
   gridWrap.appendChild(gridOuter);
