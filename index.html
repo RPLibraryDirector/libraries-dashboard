@@ -671,29 +671,29 @@ body::before{
 /* ═══ SCHEDULE ═══ */
 .sched-archival-note{
   background:rgba(254,195,28,.08);border:1px solid rgba(254,195,28,.3);
-  border-radius:var(--radius);padding:10px 16px;margin-bottom:16px;
-  font-size:12px;color:var(--text-dim);line-height:1.5;
+  border-radius:var(--radius);padding:6px 12px;margin-bottom:0;
+  font-size:11px;color:var(--text-dim);line-height:1.4;
 }
 .sched-archival-note strong{color:var(--text);font-family:'Rajdhani',sans-serif;letter-spacing:.5px;}
-.sched-lib-picker{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
-.sched-fy-group{margin-bottom:8px;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.sched-lib-picker{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.sched-fy-group{margin-bottom:4px;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
 .sched-fy-header{
-  display:flex;align-items:center;gap:10px;padding:10px 16px;
+  display:flex;align-items:center;gap:10px;padding:6px 14px;
   background:var(--surface2);cursor:pointer;user-select:none;
-  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;
   letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);
   transition:background .15s;
 }
 .sched-fy-header:hover{background:var(--surface3);}
 .sched-fy-header .fy-arrow{margin-left:auto;font-size:12px;color:var(--text-muted);transition:transform .2s;}
 .sched-fy-header.open .fy-arrow{transform:rotate(180deg);}
-.sched-fy-body{display:none;padding:8px;}
+.sched-fy-body{display:none;padding:4px;}
 .sched-fy-body.open{display:block;}
-.sched-quarter-group{margin-bottom:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.sched-quarter-group{margin-bottom:3px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
 .sched-quarter-header{
-  display:flex;align-items:center;gap:10px;padding:8px 14px;
+  display:flex;align-items:center;gap:10px;padding:5px 12px;
   background:var(--surface);cursor:pointer;user-select:none;
-  font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;
+  font-family:'Rajdhani',sans-serif;font-weight:600;font-size:12px;
   letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);
   transition:background .15s;border-bottom:1px solid var(--border);
 }
@@ -705,12 +705,12 @@ body::before{
 .sched-week-entry{border-bottom:1px solid var(--border);}
 .sched-week-entry:last-child{border-bottom:none;}
 .sched-week-header{
-  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  display:flex;align-items:center;gap:10px;padding:6px 12px;
   cursor:pointer;user-select:none;transition:background .15s;
 }
 .sched-week-header:hover{background:var(--surface2);}
 .sched-week-title{
-  font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
   letter-spacing:1px;text-transform:uppercase;color:var(--text);flex:1;
 }
 .sched-week-subtitle{font-size:11px;color:var(--text-muted);}
@@ -719,9 +719,9 @@ body::before{
 .sched-week-delete{background:none;border:none;cursor:pointer;font-size:13px;padding:2px 4px;border-radius:4px;opacity:0.3;transition:opacity .15s,background .15s;line-height:1;}
 .sched-week-header:hover .sched-week-delete{opacity:0.7;}
 .sched-week-delete:hover{opacity:1 !important;background:rgba(220,50,50,.12);}
-.sched-week-body{display:none;padding:12px 14px 16px;border-top:1px solid var(--border);background:var(--bg);}
+.sched-week-body{display:none;padding:8px 10px 10px;border-top:1px solid var(--border);background:var(--bg);}
 .sched-week-body.open{display:block;}
-.sched-week-toolbar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px;}
+.sched-week-toolbar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:6px;}
 /* Calendar grid */
 .sched-grid-wrap{overflow-x:auto;}
 .sched-grid{display:grid;grid-template-columns:52px repeat(6,1fr);border:1px solid var(--border);border-radius:6px;overflow:hidden;min-width:500px;}
@@ -2752,7 +2752,7 @@ function renderSchedulePage() {
   // Single top toolbar line: [dropdown or lib name] — Desk Schedule  |  + Add Week
   const toolbar = document.createElement('div');
   toolbar.className = 'content-toolbar';
-  toolbar.style.marginBottom = '12px';
+  toolbar.style.marginBottom = '6px';
 
   const titleWrap = document.createElement('div');
   titleWrap.style.cssText = 'display:flex;align-items:center;gap:10px;flex:1;min-width:0;';
@@ -2760,7 +2760,7 @@ function renderSchedulePage() {
   if(isDirector()) {
     // Dropdown selector
     const sel = document.createElement('select');
-    sel.style.cssText = 'font-family:"Rajdhani",sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px;text-transform:uppercase;border:none;background:transparent;color:var(--text);cursor:pointer;outline:none;padding:0;width:auto;max-width:260px;';
+    sel.style.cssText = 'font-family:"Rajdhani",sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px;text-transform:uppercase;border:none;background:transparent;color:var(--text);cursor:pointer;outline:none;padding:0;width:220px;';
     LIBRARIES.forEach(lib => {
       const opt = document.createElement('option');
       opt.value = lib.id;
@@ -2920,7 +2920,7 @@ function renderWeekGrid(container, week) {
 
   // Legend
   const legend = document.createElement('div');
-  legend.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;';
+  legend.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:5px;';
   staffCols.forEach(col => {
     const item = document.createElement('div');
     item.style.cssText = 'display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-dim);';
