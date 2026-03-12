@@ -384,7 +384,7 @@ body::before{
 }
 .sort-btn:hover{color:var(--text);border-color:var(--border2);}
 .sort-btn.active{background:var(--accent);color:#ffffff;border-color:var(--accent);}
-.cards-container{display:flex;flex-direction:column;gap:8px;min-height:60px;padding:4px 0;}
+.cards-container{display:flex;flex-direction:column;gap:13px;min-height:60px;padding:4px 0;}
 .cards-container.drag-over{
   background:rgba(0,142,206,.05);border-radius:var(--radius);
   outline:2px dashed rgba(0,142,206,.3);
@@ -478,6 +478,212 @@ body::before{
 .color-swatch.selected{border-color:#1a2233;transform:scale(1.15);}
 .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
 
+/* ═══ UNASSIGNED COLUMN ═══ */
+.column.col-unassigned .col-header{
+  background:var(--surface3) !important;
+  color:var(--text-dim) !important;
+  border:2px dashed var(--border2);
+}
+.column.col-unassigned{opacity:.88;}
+
+/* ═══ NAV SIDEBAR / BOTTOM NAV ═══ */
+.side-nav{
+  position:fixed;left:0;top:54px;bottom:0;width:52px;
+  background:var(--accent2);border-right:1px solid rgba(255,255,255,.1);
+  display:flex;flex-direction:column;align-items:center;
+  padding:8px 0;gap:4px;z-index:50;
+  transition:width .2s;
+}
+.side-nav:hover{width:180px;}
+.nav-item{
+  width:100%;display:flex;align-items:center;gap:12px;
+  padding:10px 14px;cursor:pointer;border-radius:0;
+  color:rgba(255,255,255,.7);font-family:'Rajdhani',sans-serif;
+  font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  transition:all .15s;white-space:nowrap;overflow:hidden;border:none;background:none;
+  text-align:left;
+}
+.nav-item:hover{background:rgba(255,255,255,.1);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.15);color:#fff;border-left:3px solid var(--gold);}
+.nav-item .nav-icon{font-size:18px;flex-shrink:0;min-width:24px;text-align:center;}
+.nav-item .nav-label{opacity:0;transition:opacity .15s;font-size:11px;}
+.side-nav:hover .nav-label{opacity:1;}
+.nav-sep{width:80%;height:1px;background:rgba(255,255,255,.1);margin:4px auto;}
+
+/* Pages that use the side nav get left padding */
+.page.with-nav{padding-left:52px;}
+
+/* ═══ CONTACTS PAGE ═══ */
+#page-contacts .page-body,
+#page-documents .page-body,
+#page-wiki .page-body,
+#page-lexicon .page-body,
+#page-schedule .page-body{
+  flex:1;overflow:auto;padding:28px 32px;display:flex;flex-direction:column;gap:0;
+}
+.content-toolbar{
+  display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;
+}
+.content-toolbar h2{
+  font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text);flex:1;
+}
+.search-input{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);color:var(--text);padding:7px 12px;
+  font-size:13px;font-family:'Source Sans 3',sans-serif;outline:none;
+  transition:border-color .15s;min-width:200px;
+}
+.search-input:focus{border-color:var(--accent);}
+.edit-mode-toggle{
+  display:flex;align-items:center;gap:7px;padding:6px 14px;
+  border-radius:var(--radius);border:1px solid var(--border);
+  background:var(--surface);cursor:pointer;font-family:'Rajdhani',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-muted);transition:all .15s;
+}
+.edit-mode-toggle.on{border-color:var(--gold);color:#c49500;background:rgba(254,195,28,.06);}
+.edit-mode-toggle .tog-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:background .15s;}
+.edit-mode-toggle.on .tog-dot{background:var(--gold);}
+
+/* Contact cards */
+.contacts-grid{display:flex;flex-direction:column;gap:10px;}
+.contact-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:16px 20px;
+  display:grid;grid-template-columns:1fr auto;
+  gap:8px;align-items:start;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+  transition:border-color .15s;
+}
+.contact-card:hover{border-color:var(--border2);}
+.contact-name{
+  font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:2px;
+}
+.contact-title{font-size:12px;color:var(--text-muted);margin-bottom:8px;letter-spacing:.5px;}
+.contact-details{display:flex;flex-wrap:wrap;gap:6px 16px;}
+.contact-detail{
+  display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-dim);
+}
+.contact-detail .cd-icon{font-size:12px;color:var(--text-muted);}
+.contact-detail a{color:var(--accent);text-decoration:none;}
+.contact-detail a:hover{text-decoration:underline;}
+.contact-tag{
+  display:inline-block;padding:2px 8px;border-radius:3px;
+  font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  font-family:'Rajdhani',sans-serif;background:rgba(0,142,206,.1);color:#005f8a;
+  margin-top:6px;
+}
+.contact-tag.tag-dod{background:rgba(10,86,155,.1);color:var(--accent2);}
+.contact-tag.tag-dsn{background:rgba(178,210,52,.15);color:#4a6a00;}
+.contact-actions{display:flex;gap:6px;align-items:flex-start;}
+
+/* ═══ DOCUMENT LIBRARY ═══ */
+.doc-section{margin-bottom:28px;}
+.doc-section-title{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);
+  border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px;
+}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
+.doc-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:14px 16px;
+  display:flex;align-items:flex-start;gap:12px;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+  transition:all .15s;cursor:pointer;text-decoration:none;
+}
+.doc-card:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,84,157,.1);}
+.doc-icon{font-size:24px;flex-shrink:0;margin-top:1px;}
+.doc-info{flex:1;min-width:0;}
+.doc-title{
+  font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.doc-desc{font-size:12px;color:var(--text-dim);margin-top:3px;line-height:1.4;}
+.doc-card-actions{display:flex;gap:4px;align-items:flex-start;flex-shrink:0;}
+
+/* ═══ WIKI ═══ */
+.wiki-lib-picker{
+  display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;
+}
+.wiki-lib-btn{
+  padding:6px 16px;border-radius:var(--radius);border:1px solid var(--border);
+  background:var(--surface);cursor:pointer;font-family:'Rajdhani',sans-serif;
+  font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-muted);transition:all .15s;
+}
+.wiki-lib-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.wiki-lib-btn:hover:not(.active){border-color:var(--accent);color:var(--accent);}
+.wiki-articles{display:flex;flex-direction:column;gap:0;}
+.wiki-article{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;margin-bottom:10px;overflow:hidden;
+}
+.wiki-article-header{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 18px;cursor:pointer;
+  transition:background .15s;
+}
+.wiki-article-header:hover{background:var(--surface2);}
+.wiki-article-title{
+  font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;color:var(--text);flex:1;
+}
+.wiki-article-body{
+  padding:0 18px 16px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--text-dim);line-height:1.7;white-space:pre-wrap;
+  display:none;
+}
+.wiki-article-body.open{display:block;}
+.wiki-article-actions{display:flex;gap:6px;}
+.wiki-expand-icon{color:var(--text-muted);font-size:13px;transition:transform .15s;}
+.wiki-article.expanded .wiki-expand-icon{transform:rotate(180deg);}
+.wiki-empty{
+  text-align:center;padding:48px 20px;color:var(--text-muted);
+  font-size:14px;
+}
+
+/* ═══ LEXICON ═══ */
+.lexicon-list{display:flex;flex-direction:column;gap:0;}
+.lexicon-entry{
+  border-bottom:1px solid var(--border);padding:16px 4px;
+  display:grid;grid-template-columns:220px 1fr auto;
+  gap:16px;align-items:start;
+}
+.lexicon-entry:last-child{border-bottom:none;}
+.lexicon-term{
+  font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;color:var(--text);
+  padding-top:1px;
+}
+.lexicon-def{font-size:14px;color:var(--text-dim);line-height:1.65;}
+.lexicon-actions{display:flex;gap:6px;align-items:flex-start;}
+.lexicon-alpha-header{
+  font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;
+  letter-spacing:3px;color:var(--accent);margin:20px 0 4px;
+  border-bottom:2px solid var(--accent);padding-bottom:4px;
+  display:inline-block;
+}
+
+/* ═══ SCHEDULE PLACEHOLDER ═══ */
+.schedule-coming-soon{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;color:var(--text-muted);padding:40px;text-align:center;
+}
+.schedule-coming-soon .cs-icon{font-size:56px;opacity:.4;}
+.schedule-coming-soon h2{
+  font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);
+}
+.schedule-coming-soon p{font-size:14px;max-width:380px;line-height:1.6;}
+
+/* ═══ MODAL WIDE ═══ */
+.modal-wide{width:600px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
 /* ═══ TOAST ═══ */
 #toast{
   position:fixed;bottom:24px;right:24px;
@@ -548,6 +754,36 @@ body::before{
           <div class="mode-title">My Tasks</div>
           <div class="mode-desc">Staff view. Select your library and your name to see your assigned tasks.</div>
           <div class="mode-arrow">→</div>
+        </div>
+      </div>
+      <div style="width:100%;margin-bottom:20px;">
+        <div class="section-label" style="margin-bottom:14px;">Resources</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;" id="resource-cards">
+          <div class="lib-card" onclick="goPage('page-contacts')">
+            <div style="font-size:24px;margin-bottom:8px;">📇</div>
+            <div class="lib-card-name">Contacts</div>
+            <div class="lib-card-count">Directory</div>
+          </div>
+          <div class="lib-card" onclick="goPage('page-documents')">
+            <div style="font-size:24px;margin-bottom:8px;">📁</div>
+            <div class="lib-card-name">Documents</div>
+            <div class="lib-card-count">Forms & Links</div>
+          </div>
+          <div class="lib-card" onclick="goWiki()">
+            <div style="font-size:24px;margin-bottom:8px;">📖</div>
+            <div class="lib-card-name">Wiki</div>
+            <div class="lib-card-count">Procedures</div>
+          </div>
+          <div class="lib-card" onclick="goPage('page-lexicon')">
+            <div style="font-size:24px;margin-bottom:8px;">🔤</div>
+            <div class="lib-card-name">Lexicon</div>
+            <div class="lib-card-count">Terminology</div>
+          </div>
+          <div class="lib-card" onclick="goPage('page-schedule')">
+            <div style="font-size:24px;margin-bottom:8px;">📅</div>
+            <div class="lib-card-name">Schedule</div>
+            <div class="lib-card-count">Desk Coverage</div>
+          </div>
         </div>
       </div>
     </div>
@@ -685,6 +921,237 @@ body::before{
   </div>
 </div>
 
+<!-- ═══ CONTACTS PAGE ═══ -->
+<div class="page with-nav" id="page-contacts">
+  <div class="site-header">
+    <div class="logo" onclick="goHome()">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb">
+      <span class="crumb" onclick="goHome()">Home</span>
+      <span class="sep">›</span>
+      <span class="active">Contact Directory</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="btn btn-ghost btn-sm" onclick="goHome()">← Back</button>
+  </div>
+  <div class="page-body" id="contacts-body"></div>
+</div>
+
+<!-- ═══ DOCUMENT LIBRARY PAGE ═══ -->
+<div class="page with-nav" id="page-documents">
+  <div class="site-header">
+    <div class="logo" onclick="goHome()">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb">
+      <span class="crumb" onclick="goHome()">Home</span>
+      <span class="sep">›</span>
+      <span class="active">Document Library</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="btn btn-ghost btn-sm" onclick="goHome()">← Back</button>
+  </div>
+  <div class="page-body" id="documents-body"></div>
+</div>
+
+<!-- ═══ WIKI PAGE ═══ -->
+<div class="page with-nav" id="page-wiki">
+  <div class="site-header">
+    <div class="logo" onclick="goHome()">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb">
+      <span class="crumb" onclick="goHome()">Home</span>
+      <span class="sep">›</span>
+      <span class="active">Procedures Wiki</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="btn btn-ghost btn-sm" onclick="goHome()">← Back</button>
+  </div>
+  <div class="page-body" id="wiki-body"></div>
+</div>
+
+<!-- ═══ LEXICON PAGE ═══ -->
+<div class="page with-nav" id="page-lexicon">
+  <div class="site-header">
+    <div class="logo" onclick="goHome()">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb">
+      <span class="crumb" onclick="goHome()">Home</span>
+      <span class="sep">›</span>
+      <span class="active">Lexicon</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="btn btn-ghost btn-sm" onclick="goHome()">← Back</button>
+  </div>
+  <div class="page-body" id="lexicon-body"></div>
+</div>
+
+<!-- ═══ SCHEDULE PAGE ═══ -->
+<div class="page with-nav" id="page-schedule">
+  <div class="site-header">
+    <div class="logo" onclick="goHome()">USAG <span>Libraries</span></div>
+    <div class="header-sep"></div>
+    <div class="breadcrumb">
+      <span class="crumb" onclick="goHome()">Home</span>
+      <span class="sep">›</span>
+      <span class="active">Desk Schedule</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="btn btn-ghost btn-sm" onclick="goHome()">← Back</button>
+  </div>
+  <div class="page-body">
+    <div class="schedule-coming-soon">
+      <div class="cs-icon">📅</div>
+      <h2>Desk Schedule</h2>
+      <p>The circulation desk schedule is coming soon. This will show a work-week calendar with staff coverage blocks from 08:00–20:00 in 15-minute increments, color-coded by staff member.</p>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:8px;">Staff colors will be pulled automatically from the Operations Board.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTACT MODAL ═══ -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal modal-wide">
+    <h2 id="contactModalTitle">Add Contact</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Name / Office</label>
+        <input type="text" id="contactName" placeholder="e.g. USAREUR Library Office">
+      </div>
+      <div class="form-group">
+        <label>Title / Section</label>
+        <input type="text" id="contactTitle" placeholder="e.g. Regional Librarian">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Commercial Phone</label>
+        <input type="text" id="contactPhone" placeholder="+49 631 411 0000">
+      </div>
+      <div class="form-group">
+        <label>DSN</label>
+        <input type="text" id="contactDsn" placeholder="483-0000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="contactEmail" placeholder="name@mail.mil">
+    </div>
+    <div class="form-group">
+      <label>Mailing Address <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;color:var(--text-muted)">(leave blank if not applicable)</span></label>
+      <textarea id="contactAddress" placeholder="CMR 450 Box 1234&#10;APO AE 09054" style="min-height:60px;"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category</label>
+        <select id="contactCategory">
+          <option value="general">General</option>
+          <option value="dod-library">DOD Library (ILL)</option>
+          <option value="military">Military / Command</option>
+          <option value="vendor">Vendor / Supplier</option>
+          <option value="facility">Facility / Support</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <input type="text" id="contactNotes" placeholder="Optional notes">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('contactModal')">Cancel</button>
+      <button class="btn btn-primary" id="contactSaveBtn" onclick="saveContact()">Add Contact</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DOCUMENT MODAL ═══ -->
+<div class="modal-overlay" id="docModal">
+  <div class="modal">
+    <h2 id="docModalTitle">Add Document / Link</h2>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" id="docTitle" placeholder="e.g. Opening Checklist">
+    </div>
+    <div class="form-group">
+      <label>URL</label>
+      <input type="url" id="docUrl" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" id="docDesc" placeholder="Brief description">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category</label>
+        <select id="docCategory">
+          <option value="Operations">Operations</option>
+          <option value="Statistics">Statistics</option>
+          <option value="Programming">Programming</option>
+          <option value="Reservations">Reservations</option>
+          <option value="Patron Services">Patron Services</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Icon</label>
+        <select id="docIcon">
+          <option value="📋">📋 Checklist</option>
+          <option value="📊">📊 Statistics</option>
+          <option value="📅">📅 Calendar</option>
+          <option value="📝">📝 Form</option>
+          <option value="📁">📁 Folder</option>
+          <option value="🔗">🔗 Link</option>
+          <option value="📖">📖 Book</option>
+          <option value="🖨">🖨 Equipment</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('docModal')">Cancel</button>
+      <button class="btn btn-primary" id="docSaveBtn" onclick="saveDoc()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WIKI ARTICLE MODAL ═══ -->
+<div class="modal-overlay" id="wikiModal">
+  <div class="modal modal-wide">
+    <h2 id="wikiModalTitle">Add Article</h2>
+    <div class="form-group">
+      <label>Title / Task Name</label>
+      <input type="text" id="wikiArticleTitle" placeholder="e.g. Shelf Reading">
+    </div>
+    <div class="form-group">
+      <label>Procedure / Notes</label>
+      <textarea id="wikiArticleBody" placeholder="Describe this task, best practices, things to watch out for…" style="min-height:160px;"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('wikiModal')">Cancel</button>
+      <button class="btn btn-primary" id="wikiSaveBtn" onclick="saveWikiArticle()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LEXICON MODAL ═══ -->
+<div class="modal-overlay" id="lexiconModal">
+  <div class="modal">
+    <h2 id="lexiconModalTitle">Add Term</h2>
+    <div class="form-group">
+      <label>Term</label>
+      <input type="text" id="lexiconTerm" placeholder="e.g. Shelf Reading">
+    </div>
+    <div class="form-group">
+      <label>Definition</label>
+      <textarea id="lexiconDef" placeholder="What does this term mean specifically in our context?" style="min-height:100px;"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('lexiconModal')">Cancel</button>
+      <button class="btn btn-primary" id="lexiconSaveBtn" onclick="saveLexiconEntry()">Save</button>
+    </div>
+  </div>
+</div>
+
+
+
 <div id="toast"></div>
 
 <!-- ═══ FIREBASE SDK ═══ -->
@@ -748,8 +1215,11 @@ const FREQ_ORDER  = {Daily:0,Weekly:1,'Bi-Weekly':2,Monthly:3,Quarterly:4,Annual
 const PRIO_ORDER  = {high:0,medium:1,low:2,none:3};
 
 // ═══ STATE ═══
-let state = { libraries:{} };
-LIBRARIES.forEach(l => { state.libraries[l.id] = { columns:[] }; });
+let state = { libraries:{}, contacts:[], documents:[], wiki:{}, lexicon:[] };
+LIBRARIES.forEach(l => {
+  state.libraries[l.id] = { columns:[] };
+  state.wiki[l.id] = [];
+});
 let currentUser = null;
 let currentLibId = null; // library this user is locked to (null = admin sees all)
 let unsubscribeSnapshot = null;
@@ -837,6 +1307,12 @@ async function subscribeToData() {
             LIBRARIES.forEach(l => {
               if(!state.libraries[l.id]) state.libraries[l.id] = { columns:[] };
             });
+            // Normalize new top-level fields
+            if(!state.contacts) state.contacts = [];
+            if(!state.documents) state.documents = [];
+            if(!state.lexicon) state.lexicon = [];
+            if(!state.wiki) state.wiki = {};
+            LIBRARIES.forEach(l => { if(!state.wiki[l.id]) state.wiki[l.id] = []; });
             // Re-render current view if already on a page
             if(document.getElementById('page-command').classList.contains('active') && currentLib) {
               renderCommandBoard(currentLib);
@@ -845,8 +1321,11 @@ async function subscribeToData() {
         }
       } else {
         // First run — initialize empty state
-        state = { libraries:{} };
-        LIBRARIES.forEach(l => { state.libraries[l.id] = { columns:[] }; });
+        state = { libraries:{}, contacts:[], documents:[], wiki:{}, lexicon:[] };
+        LIBRARIES.forEach(l => {
+          state.libraries[l.id] = { columns:[] };
+          state.wiki[l.id] = [];
+        });
       }
       if(!resolved){ resolved=true; resolve(); }
     });
@@ -966,10 +1445,20 @@ window.goBackToStaffPicker = function() {
 
 // ═══ COMMAND BOARD ═══
 function renderCommandBoard(libId){
+  ensureUnassigned(libId);
   const board = document.getElementById('command-board');
   board.innerHTML='';
   const lib = state.libraries[libId];
-  lib.columns.forEach(col => board.appendChild(buildColumn(col, libId, false)));
+  const regular = lib.columns.filter(c => c.id !== UNASSIGNED_ID);
+  const unassigned = lib.columns.find(c => c.id === UNASSIGNED_ID);
+  regular.forEach(col => board.appendChild(buildColumn(col, libId, false)));
+  if(unassigned) {
+    const el = buildColumn(unassigned, libId, false);
+    el.classList.add('col-unassigned');
+    const nameEl = el.querySelector('.col-name');
+    if(nameEl) nameEl.contentEditable = false;
+    board.appendChild(el);
+  }
   const addBtn = document.createElement('button');
   addBtn.className='add-col-btn';
   addBtn.innerHTML='＋ Add Staff';
@@ -1001,9 +1490,7 @@ function renderStaffPicker(libId){
   } else {
     const grid = document.createElement('div');
     grid.className='staff-grid';
-    lib.columns.forEach(col=>{
-      const btn = document.createElement('div');
-      btn.className='staff-pick-btn';
+    lib.columns.filter(col => col.id !== UNASSIGNED_ID).forEach(col=>{
       btn.style.borderColor = col.color+'55';
       btn.innerHTML=`
         <div class="spb-dot" style="background:${col.color}"></div>
@@ -1073,9 +1560,7 @@ function renderAdmin(){
       empty.textContent='No staff added yet.';
       list.appendChild(empty);
     } else {
-      lib.columns.forEach(col=>{
-        const chip = document.createElement('div');
-        chip.className='admin-staff-chip';
+      lib.columns.filter(col => col.id !== UNASSIGNED_ID).forEach(col=>{
         chip.innerHTML=`
           <div class="admin-chip-dot" style="background:${col.color}"></div>
           <div class="admin-chip-name">${col.name}</div>
@@ -1248,60 +1733,92 @@ function buildCard(card, colId, libId){
 }
 
 // ═══ DRAG & DROP ═══
-let dragCard=null, dragColId=null, dragLibId=null;
+let dragCard=null, dragColId=null, dragLibId=null, dragPlaceholder=null;
+
+function createPlaceholder() {
+  const p = document.createElement('div');
+  p.id = 'drag-placeholder';
+  p.style.cssText = 'height:4px;background:var(--accent);border-radius:2px;margin:2px 0;';
+  return p;
+}
+
 function initDragDrop(scope, libId){
   scope.querySelectorAll('.card').forEach(c=>{
     c.addEventListener('dragstart', onDragStart);
     c.addEventListener('dragend', onDragEnd);
   });
   scope.querySelectorAll('.cards-container').forEach(c=>{
-    c.addEventListener('dragover', onDragOver);
-    c.addEventListener('drop', e=>onDrop(e,libId));
+    c.addEventListener('dragover', e => onDragOver(e, libId));
+    c.addEventListener('drop', e => onDrop(e, libId));
     c.addEventListener('dragleave', onDragLeave);
+    c.addEventListener('dragenter', onDragEnter);
   });
 }
+
 function onDragStart(e){
-  dragCard=e.currentTarget;
-  dragColId=dragCard.dataset.colId;
-  dragLibId=dragCard.dataset.libId;
-  setTimeout(()=>dragCard.classList.add('dragging'),0);
-  e.dataTransfer.effectAllowed='move';
+  dragCard = e.currentTarget;
+  dragColId = dragCard.dataset.colId;
+  dragLibId = dragCard.dataset.libId;
+  dragPlaceholder = createPlaceholder();
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', dragCard.dataset.cardId);
+  requestAnimationFrame(() => { if(dragCard) dragCard.classList.add('dragging'); });
 }
+
 function onDragEnd(){
   if(dragCard) dragCard.classList.remove('dragging');
+  if(dragPlaceholder && dragPlaceholder.parentNode) dragPlaceholder.parentNode.removeChild(dragPlaceholder);
   document.querySelectorAll('.cards-container').forEach(c=>c.classList.remove('drag-over'));
-  dragCard=null; dragColId=null; dragLibId=null;
+  dragCard=null; dragColId=null; dragLibId=null; dragPlaceholder=null;
 }
-function onDragOver(e){
+
+function onDragEnter(e){
   e.preventDefault();
-  e.dataTransfer.dropEffect='move';
-  const container=e.currentTarget;
-  container.classList.add('drag-over');
-  const after=getDragAfter(container,e.clientY);
-  if(after==null) container.appendChild(dragCard);
-  else container.insertBefore(dragCard,after);
+  e.currentTarget.classList.add('drag-over');
 }
-function onDragLeave(e){ e.currentTarget.classList.remove('drag-over'); }
-function onDrop(e,libId){
+
+function onDragOver(e, libId){
   e.preventDefault();
-  const container=e.currentTarget;
+  e.dataTransfer.dropEffect = 'move';
+  if(!dragCard || !dragPlaceholder) return;
+  const container = e.currentTarget;
+  const after = getDragAfter(container, e.clientY);
+  if(after == null) {
+    container.appendChild(dragPlaceholder);
+  } else if(after !== dragPlaceholder.nextSibling) {
+    container.insertBefore(dragPlaceholder, after);
+  }
+}
+
+function onDragLeave(e){
+  const container = e.currentTarget;
+  if(!container.contains(e.relatedTarget)) {
+    container.classList.remove('drag-over');
+  }
+}
+
+function onDrop(e, libId){
+  e.preventDefault();
+  e.stopPropagation();
+  const container = e.currentTarget;
   container.classList.remove('drag-over');
-  const newColId=container.dataset.colId;
-  if(!dragCard) return;
-  const cardId=dragCard.dataset.cardId;
-  const oldColId=dragColId;
-  const lib=state.libraries[libId];
-  const oldCol=lib.columns.find(c=>c.id===oldColId);
-  const newCol=lib.columns.find(c=>c.id===newColId);
+  if(!dragCard || !dragPlaceholder) return;
+  const newColId = container.dataset.colId;
+  const cardId = dragCard.dataset.cardId;
+  const oldColId = dragColId;
+  const lib = state.libraries[libId];
+  const oldCol = lib.columns.find(c=>c.id===oldColId);
+  const newCol = lib.columns.find(c=>c.id===newColId);
   if(!oldCol||!newCol) return;
-  const idx=oldCol.cards.findIndex(c=>c.id===cardId);
+  const idx = oldCol.cards.findIndex(c=>c.id===cardId);
   if(idx===-1) return;
-  const [cardData]=oldCol.cards.splice(idx,1);
-  newCol.sort='manual';
-  const domOrder=[...container.querySelectorAll('.card')];
-  const newIndex=domOrder.findIndex(el=>el.dataset.cardId===cardId);
-  if(newIndex>=0&&newIndex<=newCol.cards.length) newCol.cards.splice(newIndex,0,cardData);
-  else newCol.cards.push(cardData);
+  const [cardData] = oldCol.cards.splice(idx,1);
+  newCol.sort = 'manual';
+  // Use placeholder position to determine insert index
+  const placeholderIdx = [...container.children].indexOf(dragPlaceholder);
+  const cardsBefore = [...container.children].slice(0, placeholderIdx).filter(el=>el.classList&&el.classList.contains('card')).length;
+  const insertIdx = Math.min(cardsBefore, newCol.cards.length);
+  newCol.cards.splice(insertIdx, 0, cardData);
   newCol.cards.forEach((c,i)=>c.manualOrder=i);
   oldCol.cards.forEach((c,i)=>c.manualOrder=i);
   save();
@@ -1310,6 +1827,7 @@ function onDrop(e,libId){
     else if(currentStaffId) openStaffTasks(libId,currentStaffId);
   },50);
 }
+
 function getDragAfter(container,y){
   const els=[...container.querySelectorAll('.card:not(.dragging)')];
   return els.reduce((closest,child)=>{
@@ -1360,6 +1878,7 @@ window.saveStaff = function(){
   if(document.getElementById('page-command').classList.contains('active') && editingStaffLib === currentLib) renderCommandBoard(editingStaffLib);
 };
 window.removeColumn = function(libId,colId){
+  if(colId === UNASSIGNED_ID) { toast('The Unassigned column cannot be removed.'); return; }
   const col=state.libraries[libId].columns.find(c=>c.id===colId);
   if(!confirm(`Remove "${col?.name}" and all their tasks?`)) return;
   state.libraries[libId].columns=state.libraries[libId].columns.filter(c=>c.id!==colId);
@@ -1435,7 +1954,581 @@ window.deleteCard = function(libId,colId,cardId){
   else if(currentStaffId) openStaffTasks(libId,currentStaffId);
 };
 
-// ═══ HELPERS ═══
+// ═══ NEW PAGE NAVIGATION ═══
+window.goPage = function(pageId) { renderPage(pageId); showPage(pageId); };
+window.goWiki = function() {
+  // If location user, go straight to their library wiki
+  if(currentLibId) {
+    currentWikiLib = currentLibId;
+  } else {
+    currentWikiLib = LIBRARIES[0].id;
+  }
+  renderWikiPage();
+  showPage('page-wiki');
+};
+function renderPage(pageId) {
+  if(pageId === 'page-contacts') renderContacts();
+  else if(pageId === 'page-documents') renderDocuments();
+  else if(pageId === 'page-lexicon') renderLexicon();
+}
+
+// ═══ UNASSIGNED COLUMN ═══
+const UNASSIGNED_ID = '__unassigned__';
+function ensureUnassigned(libId) {
+  const lib = state.libraries[libId];
+  if(!lib.columns.find(c => c.id === UNASSIGNED_ID)) {
+    lib.columns.push({
+      id: UNASSIGNED_ID,
+      name: 'Unassigned',
+      color: '#78909c',
+      sort: 'manual',
+      cards: []
+    });
+  }
+}
+
+
+// ═══ CONTACTS ═══
+let contactsEditMode = false;
+let editingContactId = null;
+
+function renderContacts() {
+  if(!state.contacts) state.contacts = [];
+  const body = document.getElementById('contacts-body');
+  const search = body.querySelector('#contacts-search')?.value || '';
+  body.innerHTML = '';
+  const toolbar = document.createElement('div');
+  toolbar.className = 'content-toolbar';
+  const h2 = document.createElement('h2');
+  h2.textContent = 'Contact Directory';
+  const searchEl = document.createElement('input');
+  searchEl.className = 'search-input';
+  searchEl.id = 'contacts-search';
+  searchEl.placeholder = '🔍 Search contacts…';
+  searchEl.value = search;
+  searchEl.oninput = () => renderContacts();
+  const tog = buildEditToggle(contactsEditMode, v => { contactsEditMode = v; renderContacts(); });
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn btn-primary btn-sm';
+  addBtn.textContent = '+ Add Contact';
+  addBtn.style.display = contactsEditMode ? '' : 'none';
+  addBtn.onclick = () => openAddContact();
+  toolbar.append(h2, searchEl, tog, addBtn);
+  body.appendChild(toolbar);
+
+  const q = search.toLowerCase();
+  const filtered = state.contacts.filter(c =>
+    !q || [c.name,c.title,c.email,c.phone,c.dsn,c.notes].some(f => f && f.toLowerCase().includes(q))
+  );
+
+  // Group by category
+  const cats = ['dod-library','military','vendor','facility','general'];
+  const catLabels = {'dod-library':'DOD Libraries (ILL)','military':'Military / Command','vendor':'Vendors & Suppliers','facility':'Facilities & Support','general':'General'};
+  const grid = document.createElement('div');
+  grid.className = 'contacts-grid';
+
+  cats.forEach(cat => {
+    const group = filtered.filter(c => (c.category||'general') === cat);
+    if(!group.length) return;
+    const catHeader = document.createElement('div');
+    catHeader.style.cssText = 'font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);padding-bottom:6px;margin:16px 0 8px;';
+    catHeader.textContent = catLabels[cat];
+    grid.appendChild(catHeader);
+    group.forEach(contact => grid.appendChild(buildContactCard(contact)));
+  });
+
+  if(!filtered.length) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'text-align:center;padding:48px;color:var(--text-muted);font-size:14px;';
+    empty.textContent = state.contacts.length ? 'No contacts match your search.' : 'No contacts yet. Use + Add Contact to get started.';
+    grid.appendChild(empty);
+  }
+  body.appendChild(grid);
+}
+
+function buildContactCard(contact) {
+  const card = document.createElement('div');
+  card.className = 'contact-card';
+  const info = document.createElement('div');
+  const nameEl = document.createElement('div');
+  nameEl.className = 'contact-name';
+  nameEl.textContent = contact.name || '—';
+  info.appendChild(nameEl);
+  if(contact.title) {
+    const t = document.createElement('div');
+    t.className = 'contact-title';
+    t.textContent = contact.title;
+    info.appendChild(t);
+  }
+  const details = document.createElement('div');
+  details.className = 'contact-details';
+  if(contact.email) details.appendChild(buildDetail('✉', `<a href="mailto:${escapeHtml(contact.email)}">${escapeHtml(contact.email)}</a>`));
+  if(contact.phone) details.appendChild(buildDetail('📞', escapeHtml(contact.phone)));
+  if(contact.dsn) {
+    const d = buildDetail('📟', escapeHtml(contact.dsn));
+    const tag = document.createElement('span');
+    tag.className = 'contact-tag tag-dsn';
+    tag.textContent = 'DSN';
+    d.appendChild(tag);
+    details.appendChild(d);
+  }
+  if(contact.address) details.appendChild(buildDetail('📬', escapeHtml(contact.address).replace(/\n/g,'<br>')));
+  if(contact.notes) details.appendChild(buildDetail('📝', escapeHtml(contact.notes)));
+  info.appendChild(details);
+  const actions = document.createElement('div');
+  actions.className = 'contact-actions';
+  if(contactsEditMode) {
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn btn-ghost btn-sm';
+    editBtn.textContent = 'Edit';
+    editBtn.onclick = () => openEditContact(contact.id);
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn btn-danger btn-sm';
+    delBtn.textContent = '✕';
+    delBtn.onclick = () => { if(confirm('Remove this contact?')) { state.contacts = state.contacts.filter(c => c.id !== contact.id); save(); renderContacts(); } };
+    actions.append(editBtn, delBtn);
+  }
+  card.append(info, actions);
+  return card;
+}
+function buildDetail(icon, html) {
+  const d = document.createElement('div');
+  d.className = 'contact-detail';
+  d.innerHTML = `<span class="cd-icon">${icon}</span><span>${html}</span>`;
+  return d;
+}
+
+window.openAddContact = function() {
+  editingContactId = null;
+  clearContactForm();
+  document.getElementById('contactModalTitle').textContent = 'Add Contact';
+  document.getElementById('contactSaveBtn').textContent = 'Add Contact';
+  openModal('contactModal');
+  setTimeout(() => document.getElementById('contactName').focus(), 50);
+};
+function openEditContact(id) {
+  const c = state.contacts.find(x => x.id === id);
+  if(!c) return;
+  editingContactId = id;
+  document.getElementById('contactName').value = c.name||'';
+  document.getElementById('contactTitle').value = c.title||'';
+  document.getElementById('contactPhone').value = c.phone||'';
+  document.getElementById('contactDsn').value = c.dsn||'';
+  document.getElementById('contactEmail').value = c.email||'';
+  document.getElementById('contactAddress').value = c.address||'';
+  document.getElementById('contactCategory').value = c.category||'general';
+  document.getElementById('contactNotes').value = c.notes||'';
+  document.getElementById('contactModalTitle').textContent = 'Edit Contact';
+  document.getElementById('contactSaveBtn').textContent = 'Save';
+  openModal('contactModal');
+  setTimeout(() => document.getElementById('contactName').focus(), 50);
+}
+function clearContactForm() {
+  ['contactName','contactTitle','contactPhone','contactDsn','contactEmail','contactAddress','contactNotes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('contactCategory').value = 'general';
+}
+window.saveContact = function() {
+  const name = document.getElementById('contactName').value.trim();
+  if(!name) { toast('Name is required.'); return; }
+  const entry = {
+    id: editingContactId || uid(),
+    name,
+    title: document.getElementById('contactTitle').value.trim(),
+    phone: document.getElementById('contactPhone').value.trim(),
+    dsn: document.getElementById('contactDsn').value.trim(),
+    email: document.getElementById('contactEmail').value.trim(),
+    address: document.getElementById('contactAddress').value.trim(),
+    category: document.getElementById('contactCategory').value,
+    notes: document.getElementById('contactNotes').value.trim(),
+  };
+  if(editingContactId) {
+    const idx = state.contacts.findIndex(c => c.id === editingContactId);
+    if(idx !== -1) state.contacts[idx] = entry;
+  } else {
+    state.contacts.push(entry);
+  }
+  save(); closeModal('contactModal'); renderContacts();
+};
+
+// ═══ DOCUMENT LIBRARY ═══
+let documentsEditMode = false;
+let editingDocId = null;
+
+function renderDocuments() {
+  if(!state.documents) state.documents = [];
+  const body = document.getElementById('documents-body');
+  body.innerHTML = '';
+  const toolbar = document.createElement('div');
+  toolbar.className = 'content-toolbar';
+  const h2 = document.createElement('h2');
+  h2.textContent = 'Document Library';
+  const tog = buildEditToggle(documentsEditMode, v => { documentsEditMode = v; renderDocuments(); });
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn btn-primary btn-sm';
+  addBtn.textContent = '+ Add Link';
+  addBtn.style.display = documentsEditMode ? '' : 'none';
+  addBtn.onclick = () => openAddDoc();
+  toolbar.append(h2, tog, addBtn);
+  body.appendChild(toolbar);
+
+  const categories = [...new Set(state.documents.map(d => d.category||'Other'))].sort();
+  if(!state.documents.length) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'text-align:center;padding:48px;color:var(--text-muted);font-size:14px;';
+    empty.textContent = 'No documents yet. Toggle edit mode and use + Add Link to get started.';
+    body.appendChild(empty);
+    return;
+  }
+  categories.forEach(cat => {
+    const docs = state.documents.filter(d => (d.category||'Other') === cat);
+    if(!docs.length) return;
+    const section = document.createElement('div');
+    section.className = 'doc-section';
+    const title = document.createElement('div');
+    title.className = 'doc-section-title';
+    title.textContent = cat;
+    section.appendChild(title);
+    const grid = document.createElement('div');
+    grid.className = 'doc-grid';
+    docs.forEach(doc => {
+      const card = document.createElement('a');
+      card.className = 'doc-card';
+      card.href = doc.url || '#';
+      card.target = '_blank';
+      card.rel = 'noopener';
+      card.innerHTML = `<div class="doc-icon">${doc.icon||'🔗'}</div><div class="doc-info"><div class="doc-title">${escapeHtml(doc.title)}</div>${doc.desc?`<div class="doc-desc">${escapeHtml(doc.desc)}</div>`:''}</div>`;
+      if(documentsEditMode) {
+        card.href = '#';
+        card.onclick = e => e.preventDefault();
+        const actions = document.createElement('div');
+        actions.className = 'doc-card-actions';
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn btn-ghost btn-sm';
+        editBtn.textContent = 'Edit';
+        editBtn.onclick = e => { e.preventDefault(); openEditDoc(doc.id); };
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn btn-danger btn-sm';
+        delBtn.textContent = '✕';
+        delBtn.onclick = e => { e.preventDefault(); if(confirm('Remove this link?')) { state.documents = state.documents.filter(d => d.id !== doc.id); save(); renderDocuments(); } };
+        actions.append(editBtn, delBtn);
+        card.appendChild(actions);
+      }
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);
+    body.appendChild(section);
+  });
+}
+
+window.openAddDoc = function() {
+  editingDocId = null;
+  ['docTitle','docUrl','docDesc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('docCategory').value = 'Operations';
+  document.getElementById('docIcon').value = '📋';
+  document.getElementById('docModalTitle').textContent = 'Add Document / Link';
+  document.getElementById('docSaveBtn').textContent = 'Add';
+  openModal('docModal');
+  setTimeout(() => document.getElementById('docTitle').focus(), 50);
+};
+function openEditDoc(id) {
+  const d = state.documents.find(x => x.id === id);
+  if(!d) return;
+  editingDocId = id;
+  document.getElementById('docTitle').value = d.title||'';
+  document.getElementById('docUrl').value = d.url||'';
+  document.getElementById('docDesc').value = d.desc||'';
+  document.getElementById('docCategory').value = d.category||'Operations';
+  document.getElementById('docIcon').value = d.icon||'📋';
+  document.getElementById('docModalTitle').textContent = 'Edit Link';
+  document.getElementById('docSaveBtn').textContent = 'Save';
+  openModal('docModal');
+}
+window.saveDoc = function() {
+  const title = document.getElementById('docTitle').value.trim();
+  const url = document.getElementById('docUrl').value.trim();
+  if(!title||!url) { toast('Title and URL are required.'); return; }
+  const entry = {
+    id: editingDocId || uid(),
+    title, url,
+    desc: document.getElementById('docDesc').value.trim(),
+    category: document.getElementById('docCategory').value,
+    icon: document.getElementById('docIcon').value,
+  };
+  if(editingDocId) {
+    const idx = state.documents.findIndex(d => d.id === editingDocId);
+    if(idx !== -1) state.documents[idx] = entry;
+  } else {
+    state.documents.push(entry);
+  }
+  save(); closeModal('docModal'); renderDocuments();
+};
+
+// ═══ WIKI ═══
+let currentWikiLib = null;
+let wikiEditMode = false;
+let editingWikiId = null;
+let editingWikiLib = null;
+
+function renderWikiPage() {
+  if(!state.wiki) state.wiki = {};
+  LIBRARIES.forEach(l => { if(!state.wiki[l.id]) state.wiki[l.id] = []; });
+  const body = document.getElementById('wiki-body');
+  body.innerHTML = '';
+
+  // Library picker (director sees all; location user only sees theirs)
+  const showPicker = isDirector();
+  if(showPicker) {
+    const picker = document.createElement('div');
+    picker.className = 'wiki-lib-picker';
+    LIBRARIES.forEach(lib => {
+      const btn = document.createElement('button');
+      btn.className = 'wiki-lib-btn' + (currentWikiLib === lib.id ? ' active' : '');
+      btn.textContent = lib.short;
+      btn.onclick = () => { currentWikiLib = lib.id; wikiEditMode = false; renderWikiPage(); };
+      picker.appendChild(btn);
+    });
+    body.appendChild(picker);
+  }
+
+  const libMeta = LIBRARIES.find(l => l.id === currentWikiLib);
+  const toolbar = document.createElement('div');
+  toolbar.className = 'content-toolbar';
+  const h2 = document.createElement('h2');
+  h2.textContent = (libMeta?.name || '') + ' — Procedures Wiki';
+  h2.style.fontSize = '16px';
+
+  const canEdit = isDirector() || (isLocationUser() && EMAIL_TO_LIB[currentUser.email] === currentWikiLib);
+  let tog = null;
+  if(canEdit) {
+    tog = buildEditToggle(wikiEditMode, v => { wikiEditMode = v; renderWikiPage(); });
+  }
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn btn-primary btn-sm';
+  addBtn.textContent = '+ Add Article';
+  addBtn.style.display = (canEdit && wikiEditMode) ? '' : 'none';
+  addBtn.onclick = () => openAddWikiArticle(currentWikiLib);
+  toolbar.append(h2);
+  if(tog) toolbar.append(tog);
+  toolbar.append(addBtn);
+  body.appendChild(toolbar);
+
+  const articles = state.wiki[currentWikiLib] || [];
+  if(!articles.length) {
+    const empty = document.createElement('div');
+    empty.className = 'wiki-empty';
+    empty.textContent = canEdit && wikiEditMode ? 'No articles yet. Use + Add Article to create your first procedure.' : 'No articles yet.';
+    body.appendChild(empty);
+    return;
+  }
+
+  const sorted = [...articles].sort((a,b) => (a.title||'').localeCompare(b.title||''));
+  const list = document.createElement('div');
+  list.className = 'wiki-articles';
+  sorted.forEach(article => {
+    const wrap = document.createElement('div');
+    wrap.className = 'wiki-article';
+    wrap.id = 'wiki-' + article.id;
+    const header = document.createElement('div');
+    header.className = 'wiki-article-header';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'wiki-article-title';
+    titleEl.textContent = article.title;
+    const expandIcon = document.createElement('span');
+    expandIcon.className = 'wiki-expand-icon';
+    expandIcon.textContent = '▾';
+    const actions = document.createElement('div');
+    actions.className = 'wiki-article-actions';
+    if(canEdit && wikiEditMode) {
+      const editBtn = document.createElement('button');
+      editBtn.className = 'btn btn-ghost btn-sm';
+      editBtn.textContent = 'Edit';
+      editBtn.onclick = e => { e.stopPropagation(); openEditWikiArticle(currentWikiLib, article.id); };
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn btn-danger btn-sm';
+      delBtn.textContent = '✕';
+      delBtn.onclick = e => { e.stopPropagation(); if(confirm(`Delete "${article.title}"?`)) { state.wiki[currentWikiLib] = state.wiki[currentWikiLib].filter(a => a.id !== article.id); save(); renderWikiPage(); } };
+      actions.append(editBtn, delBtn);
+    }
+    header.append(titleEl, actions, expandIcon);
+    const bodyEl = document.createElement('div');
+    bodyEl.className = 'wiki-article-body';
+    bodyEl.textContent = article.body || '';
+    header.onclick = () => {
+      const open = bodyEl.classList.contains('open');
+      bodyEl.classList.toggle('open', !open);
+      wrap.classList.toggle('expanded', !open);
+    };
+    wrap.append(header, bodyEl);
+    list.appendChild(wrap);
+  });
+  body.appendChild(list);
+}
+
+window.openAddWikiArticle = function(libId) {
+  editingWikiId = null; editingWikiLib = libId;
+  document.getElementById('wikiArticleTitle').value = '';
+  document.getElementById('wikiArticleBody').value = '';
+  document.getElementById('wikiModalTitle').textContent = 'Add Article';
+  document.getElementById('wikiSaveBtn').textContent = 'Save';
+  openModal('wikiModal');
+  setTimeout(() => document.getElementById('wikiArticleTitle').focus(), 50);
+};
+function openEditWikiArticle(libId, articleId) {
+  const article = (state.wiki[libId]||[]).find(a => a.id === articleId);
+  if(!article) return;
+  editingWikiId = articleId; editingWikiLib = libId;
+  document.getElementById('wikiArticleTitle').value = article.title||'';
+  document.getElementById('wikiArticleBody').value = article.body||'';
+  document.getElementById('wikiModalTitle').textContent = 'Edit Article';
+  document.getElementById('wikiSaveBtn').textContent = 'Save Changes';
+  openModal('wikiModal');
+  setTimeout(() => document.getElementById('wikiArticleTitle').focus(), 50);
+}
+window.saveWikiArticle = function() {
+  const title = document.getElementById('wikiArticleTitle').value.trim();
+  const body = document.getElementById('wikiArticleBody').value.trim();
+  if(!title) { toast('Title is required.'); return; }
+  if(!state.wiki[editingWikiLib]) state.wiki[editingWikiLib] = [];
+  const entry = { id: editingWikiId || uid(), title, body };
+  if(editingWikiId) {
+    const idx = state.wiki[editingWikiLib].findIndex(a => a.id === editingWikiId);
+    if(idx !== -1) state.wiki[editingWikiLib][idx] = entry;
+  } else {
+    state.wiki[editingWikiLib].push(entry);
+  }
+  save(); closeModal('wikiModal'); renderWikiPage();
+};
+
+// ═══ LEXICON ═══
+let lexiconEditMode = false;
+let editingLexiconId = null;
+
+function renderLexicon() {
+  if(!state.lexicon) state.lexicon = [];
+  const body = document.getElementById('lexicon-body');
+  const search = body.querySelector('#lexicon-search')?.value || '';
+  body.innerHTML = '';
+  const toolbar = document.createElement('div');
+  toolbar.className = 'content-toolbar';
+  const h2 = document.createElement('h2');
+  h2.textContent = 'Lexicon';
+  const searchEl = document.createElement('input');
+  searchEl.className = 'search-input';
+  searchEl.id = 'lexicon-search';
+  searchEl.placeholder = '🔍 Search terms…';
+  searchEl.value = search;
+  searchEl.oninput = () => renderLexicon();
+  const tog = buildEditToggle(lexiconEditMode, v => { lexiconEditMode = v; renderLexicon(); });
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn btn-primary btn-sm';
+  addBtn.textContent = '+ Add Term';
+  addBtn.style.display = lexiconEditMode ? '' : 'none';
+  addBtn.onclick = () => openAddLexiconEntry();
+  toolbar.append(h2, searchEl, tog, addBtn);
+  body.appendChild(toolbar);
+
+  const q = search.toLowerCase();
+  const filtered = state.lexicon.filter(e =>
+    !q || (e.term||'').toLowerCase().includes(q) || (e.def||'').toLowerCase().includes(q)
+  );
+  const sorted = [...filtered].sort((a,b) => (a.term||'').localeCompare(b.term||''));
+
+  if(!sorted.length) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'text-align:center;padding:48px;color:var(--text-muted);font-size:14px;';
+    empty.textContent = state.lexicon.length ? 'No terms match your search.' : 'No terms yet. Toggle edit mode and use + Add Term to build your lexicon.';
+    body.appendChild(empty);
+    return;
+  }
+
+  // Group alphabetically
+  const groups = {};
+  sorted.forEach(e => {
+    const letter = (e.term||'#')[0].toUpperCase();
+    if(!groups[letter]) groups[letter] = [];
+    groups[letter].push(e);
+  });
+
+  const list = document.createElement('div');
+  list.className = 'lexicon-list';
+  Object.keys(groups).sort().forEach(letter => {
+    const hdr = document.createElement('div');
+    hdr.className = 'lexicon-alpha-header';
+    hdr.textContent = letter;
+    list.appendChild(hdr);
+    groups[letter].forEach(entry => {
+      const row = document.createElement('div');
+      row.className = 'lexicon-entry';
+      const termEl = document.createElement('div');
+      termEl.className = 'lexicon-term';
+      termEl.textContent = entry.term;
+      const defEl = document.createElement('div');
+      defEl.className = 'lexicon-def';
+      defEl.textContent = entry.def;
+      const actions = document.createElement('div');
+      actions.className = 'lexicon-actions';
+      if(lexiconEditMode) {
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn btn-ghost btn-sm';
+        editBtn.textContent = 'Edit';
+        editBtn.onclick = () => openEditLexiconEntry(entry.id);
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn btn-danger btn-sm';
+        delBtn.textContent = '✕';
+        delBtn.onclick = () => { if(confirm(`Delete "${entry.term}"?`)) { state.lexicon = state.lexicon.filter(e => e.id !== entry.id); save(); renderLexicon(); } };
+        actions.append(editBtn, delBtn);
+      }
+      row.append(termEl, defEl, actions);
+      list.appendChild(row);
+    });
+  });
+  body.appendChild(list);
+}
+
+window.openAddLexiconEntry = function() {
+  editingLexiconId = null;
+  document.getElementById('lexiconTerm').value = '';
+  document.getElementById('lexiconDef').value = '';
+  document.getElementById('lexiconModalTitle').textContent = 'Add Term';
+  document.getElementById('lexiconSaveBtn').textContent = 'Save';
+  openModal('lexiconModal');
+  setTimeout(() => document.getElementById('lexiconTerm').focus(), 50);
+};
+function openEditLexiconEntry(id) {
+  const e = state.lexicon.find(x => x.id === id);
+  if(!e) return;
+  editingLexiconId = id;
+  document.getElementById('lexiconTerm').value = e.term||'';
+  document.getElementById('lexiconDef').value = e.def||'';
+  document.getElementById('lexiconModalTitle').textContent = 'Edit Term';
+  document.getElementById('lexiconSaveBtn').textContent = 'Save Changes';
+  openModal('lexiconModal');
+  setTimeout(() => document.getElementById('lexiconTerm').focus(), 50);
+}
+window.saveLexiconEntry = function() {
+  const term = document.getElementById('lexiconTerm').value.trim();
+  const def = document.getElementById('lexiconDef').value.trim();
+  if(!term||!def) { toast('Term and definition are required.'); return; }
+  const entry = { id: editingLexiconId || uid(), term, def };
+  if(editingLexiconId) {
+    const idx = state.lexicon.findIndex(e => e.id === editingLexiconId);
+    if(idx !== -1) state.lexicon[idx] = entry;
+  } else {
+    state.lexicon.push(entry);
+  }
+  save(); closeModal('lexiconModal'); renderLexicon();
+};
+
+// ═══ SHARED EDIT TOGGLE BUILDER ═══
+function buildEditToggle(isOn, onChange) {
+  const tog = document.createElement('button');
+  tog.className = 'edit-mode-toggle' + (isOn ? ' on' : '');
+  tog.innerHTML = `<span class="tog-dot"></span>${isOn ? 'Editing' : 'Locked'}`;
+  tog.onclick = () => onChange(!isOn);
+  return tog;
+}
+
+
 function buildColorGrid(containerId,palette,selectedHex,onSelect){
   const grid=document.getElementById(containerId);
   grid.innerHTML='';
