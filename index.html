@@ -2660,7 +2660,7 @@ function buildEditToggle(isOn, onChange) {
 const SCHED_DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const SCHED_START_H = 9, SCHED_END_H = 18;
 const SCHED_SLOTS = (SCHED_END_H - SCHED_START_H) * 2; // 30-min slots
-const SCHED_SLOT_H = 15; // px per slot
+const SCHED_SLOT_H = 38; // px per slot
 
 // ISO week number
 function getISOWeek(date) {
@@ -2908,7 +2908,8 @@ function renderWeekGrid(container, week) {
 
   // Time label column
   const SCHED_HOURS = SCHED_END_H - SCHED_START_H;
-  const totalGridH = SCHED_SLOTS * SCHED_SLOT_H;
+  const PAD_H = Math.round(SCHED_SLOT_H / 3); // padding rows top & bottom
+  const totalGridH = SCHED_SLOTS * SCHED_SLOT_H + PAD_H * 2;
   const HDR_H = 24;
 
   const timeCol = document.createElement('div');
@@ -2924,7 +2925,7 @@ function renderWeekGrid(container, week) {
   timeBody.style.cssText = `position:relative;flex:1;height:${totalGridH}px;`;
 
   for(let h = 0; h <= SCHED_HOURS; h++) {
-    const topPx = h * SCHED_SLOT_H * 2; // 2 slots per hour
+    const topPx = PAD_H + h * SCHED_SLOT_H * 2; // offset by pad
     const label = document.createElement('div');
     label.style.cssText = `
       position:absolute;
@@ -2964,14 +2965,18 @@ function renderWeekGrid(container, week) {
   const dayColsRow = document.createElement('div');
   dayColsRow.style.cssText = 'display:grid;grid-template-columns:repeat(6,1fr);flex:1;';
 
-  const colH = SCHED_SLOTS * SCHED_SLOT_H;
   const shifts = week.shifts || [];
   SCHED_DAYS.forEach((_, di) => {
     const col = document.createElement('div');
-    col.style.cssText = `position:relative;height:${colH}px;border-right:1px solid var(--border);box-sizing:border-box;`;
+    col.style.cssText = `position:relative;height:${totalGridH}px;border-right:1px solid var(--border);box-sizing:border-box;`;
     if(di === 5) col.style.borderRight = 'none';
 
-    // Slot lines — use flow layout so they actually fill the column
+    // Top padding row — same bg as grid, no border
+    const padTop = document.createElement('div');
+    padTop.style.cssText = `height:${PAD_H}px;box-sizing:border-box;`;
+    col.appendChild(padTop);
+
+    // Slot lines
     for(let i = 0; i < SCHED_SLOTS; i++) {
       const isHour = i % 2 === 0;
       const s = document.createElement('div');
@@ -2979,11 +2984,16 @@ function renderWeekGrid(container, week) {
       col.appendChild(s);
     }
 
-    // Shift blocks — absolutely positioned over the slot lines
+    // Bottom padding row
+    const padBot = document.createElement('div');
+    padBot.style.cssText = `height:${PAD_H}px;box-sizing:border-box;`;
+    col.appendChild(padBot);
+
+    // Shift blocks — absolutely positioned, offset by PAD_H
     shifts.filter(s => s.day === di).forEach(s => {
       const staffCol = staffCols.find(c => c.id === s.staffId);
       if(!staffCol) return;
-      const top = s.startSlot * SCHED_SLOT_H;
+      const top = PAD_H + s.startSlot * SCHED_SLOT_H;
       const height = (s.endSlot - s.startSlot) * SCHED_SLOT_H;
       const rgb = hexToRgb(staffCol.color);
       const lum = rgb ? (0.299*rgb.r + 0.587*rgb.g + 0.114*rgb.b)/255 : 1;
@@ -2999,7 +3009,7 @@ function renderWeekGrid(container, week) {
     dayColsRow.appendChild(col);
   });
 
-  dayColsRow.style.height = colH + 'px';
+  dayColsRow.style.height = totalGridH + 'px';
   daysArea.appendChild(dayColsRow);
   gridOuter.appendChild(daysArea);
   gridWrap.appendChild(gridOuter);
