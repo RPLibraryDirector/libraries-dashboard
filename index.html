@@ -1400,14 +1400,16 @@ body::before{
     <div class="form-row">
       <div class="form-group">
         <label>Category</label>
-        <select id="docCategory">
-          <option value="Operations">Operations</option>
-          <option value="Statistics">Statistics</option>
-          <option value="Programming">Programming</option>
-          <option value="Reservations">Reservations</option>
-          <option value="Patron Services">Patron Services</option>
-          <option value="Other">Other</option>
+        <select id="docCategory" onchange="toggleCustomDocCat(this.value)">
+          <option value="MS Forms">MS Forms</option>
+          <option value="__custom__">＋ Custom…</option>
         </select>
+        <div id="customDocCatWrap" style="display:none;margin-top:6px;position:relative;">
+          <input type="text" id="docCustomCat" placeholder="Type or pick an existing custom category"
+            style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:9px 12px;font-size:14px;font-family:'Source Sans 3',sans-serif;outline:none;"
+            oninput="showDocCatSuggestions(this.value)" onblur="hideDocCatSuggestions()" autocomplete="off">
+          <div id="docCatSuggestions" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--surface);border:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius);z-index:200;max-height:160px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.1);"></div>
+        </div>
       </div>
       <div class="form-group">
         <label>Icon</label>
@@ -2717,8 +2719,9 @@ function renderDocuments() {
 
 window.openAddDoc = function() {
   editingDocId = null;
-  ['docTitle','docUrl','docDesc'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('docCategory').value = 'Operations';
+  ['docTitle','docUrl','docDesc','docCustomCat'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('docCategory').value = 'MS Forms';
+  document.getElementById('customDocCatWrap').style.display = 'none';
   document.getElementById('docIcon').value = '📋';
   document.getElementById('docModalTitle').textContent = 'Add Document / Link';
   document.getElementById('docSaveBtn').textContent = 'Add';
@@ -2732,21 +2735,67 @@ function openEditDoc(id) {
   document.getElementById('docTitle').value = d.title||'';
   document.getElementById('docUrl').value = d.url||'';
   document.getElementById('docDesc').value = d.desc||'';
-  document.getElementById('docCategory').value = d.category||'Operations';
   document.getElementById('docIcon').value = d.icon||'📋';
+  // Handle custom category
+  const FIXED_DOC_CATS = ['MS Forms'];
+  const cat = d.category || 'MS Forms';
+  if(FIXED_DOC_CATS.includes(cat)) {
+    document.getElementById('docCategory').value = cat;
+    document.getElementById('customDocCatWrap').style.display = 'none';
+    document.getElementById('docCustomCat').value = '';
+  } else {
+    document.getElementById('docCategory').value = '__custom__';
+    document.getElementById('customDocCatWrap').style.display = '';
+    document.getElementById('docCustomCat').value = cat;
+  }
   document.getElementById('docModalTitle').textContent = 'Edit Link';
   document.getElementById('docSaveBtn').textContent = 'Save';
   openModal('docModal');
 }
+window.toggleCustomDocCat = function(val) {
+  document.getElementById('customDocCatWrap').style.display = val === '__custom__' ? '' : 'none';
+  if(val === '__custom__') setTimeout(() => document.getElementById('docCustomCat').focus(), 50);
+};
+function getCustomDocCategories() {
+  const FIXED = ['MS Forms'];
+  const custom = new Set();
+  (state.documents||[]).forEach(d => { if(d.category && !FIXED.includes(d.category)) custom.add(d.category); });
+  return [...custom].sort();
+}
+window.showDocCatSuggestions = function(val) {
+  const box = document.getElementById('docCatSuggestions');
+  const q = val.trim().toLowerCase();
+  const matches = getCustomDocCategories().filter(c => !q || c.toLowerCase().includes(q));
+  if(!matches.length) { box.style.display = 'none'; return; }
+  box.innerHTML = '';
+  matches.forEach(cat => {
+    const item = document.createElement('div');
+    item.style.cssText = 'padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text);transition:background .1s;';
+    item.textContent = cat;
+    item.onmousedown = () => { document.getElementById('docCustomCat').value = cat; box.style.display = 'none'; };
+    item.onmouseover = () => item.style.background = 'var(--surface2)';
+    item.onmouseout = () => item.style.background = '';
+    box.appendChild(item);
+  });
+  box.style.display = '';
+};
+window.hideDocCatSuggestions = function() {
+  setTimeout(() => { document.getElementById('docCatSuggestions').style.display = 'none'; }, 150);
+};
 window.saveDoc = function() {
   const title = document.getElementById('docTitle').value.trim();
   const url = document.getElementById('docUrl').value.trim();
   if(!title||!url) { toast('Title and URL are required.'); return; }
+  let category = document.getElementById('docCategory').value;
+  if(category === '__custom__') {
+    category = document.getElementById('docCustomCat').value.trim();
+    if(!category) { toast('Please enter a custom category name.'); return; }
+  }
   const entry = {
     id: editingDocId || uid(),
     title, url,
     desc: document.getElementById('docDesc').value.trim(),
-    category: document.getElementById('docCategory').value,
+    category,
     icon: document.getElementById('docIcon').value,
   };
   if(editingDocId) {
