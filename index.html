@@ -3121,6 +3121,7 @@ window.deleteShift = function() {
 };
 
 // ═══ HELPERS ═══
+function buildColorGrid(containerId,palette,selectedHex,onSelect){
   const grid=document.getElementById(containerId);
   grid.innerHTML='';
   palette.forEach(item=>{
