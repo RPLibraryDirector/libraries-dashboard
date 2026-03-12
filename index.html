@@ -2746,41 +2746,49 @@ function renderSchedulePage() {
   const body = document.getElementById('schedule-body');
   body.innerHTML = '';
 
-  // Archival note
-  const note = document.createElement('div');
-  note.className = 'sched-archival-note';
-  note.innerHTML = '<strong>Archival Notice:</strong> Desk schedule entries are for archival and transparency purposes only. Weeks may not be edited or removed without Librarian approval. They serve as a permanent record of desk coverage.';
-  body.appendChild(note);
-
-  // Library picker
-  if(isDirector()) {
-    const picker = document.createElement('div');
-    picker.className = 'sched-lib-picker';
-    LIBRARIES.forEach(lib => {
-      const btn = document.createElement('button');
-      btn.className = 'wiki-lib-btn' + (schedLibId === lib.id ? ' active' : '');
-      btn.textContent = lib.short;
-      btn.onclick = () => { schedLibId = lib.id; renderSchedulePage(); };
-      picker.appendChild(btn);
-    });
-    body.appendChild(picker);
-  }
-
   const libData = state.schedule[schedLibId] || { weeks: [] };
   const weeks = libData.weeks || [];
 
-  // Top toolbar
+  // Single top toolbar line: [dropdown or lib name] — Desk Schedule  |  + Add Week
   const toolbar = document.createElement('div');
   toolbar.className = 'content-toolbar';
-  const h2 = document.createElement('h2');
-  const libMeta = LIBRARIES.find(l => l.id === schedLibId);
-  h2.textContent = libMeta.name + ' — Desk Schedule';
-  h2.style.fontSize = '16px';
+  toolbar.style.marginBottom = '12px';
+
+  const titleWrap = document.createElement('div');
+  titleWrap.style.cssText = 'display:flex;align-items:center;gap:10px;flex:1;min-width:0;';
+
+  if(isDirector()) {
+    // Dropdown selector
+    const sel = document.createElement('select');
+    sel.style.cssText = 'font-family:"Rajdhani",sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px;text-transform:uppercase;border:none;background:transparent;color:var(--text);cursor:pointer;outline:none;padding:0;';
+    LIBRARIES.forEach(lib => {
+      const opt = document.createElement('option');
+      opt.value = lib.id;
+      opt.textContent = lib.name;
+      if(lib.id === schedLibId) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    sel.onchange = () => { schedLibId = sel.value; renderSchedulePage(); };
+    titleWrap.appendChild(sel);
+  } else {
+    const libMeta = LIBRARIES.find(l => l.id === schedLibId);
+    const title = document.createElement('span');
+    title.style.cssText = 'font-family:"Rajdhani",sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px;text-transform:uppercase;color:var(--text);';
+    title.textContent = libMeta.name;
+    titleWrap.appendChild(title);
+  }
+
+  const dash = document.createElement('span');
+  dash.style.cssText = 'font-family:"Rajdhani",sans-serif;font-size:15px;font-weight:700;color:var(--text-muted);letter-spacing:.5px;';
+  dash.textContent = '— DESK SCHEDULE';
+  titleWrap.appendChild(dash);
+
   const addBtn = document.createElement('button');
   addBtn.className = 'btn btn-primary btn-sm';
   addBtn.textContent = '+ Add Week';
   addBtn.onclick = () => openAddWeekModal();
-  toolbar.append(h2, addBtn);
+
+  toolbar.append(titleWrap, addBtn);
   body.appendChild(toolbar);
 
   if(!weeks.length) {
@@ -2883,6 +2891,13 @@ function renderSchedulePage() {
     fyGroup.append(fyHdr, fyBody);
     body.appendChild(fyGroup);
   });
+
+  // Archival notice at bottom
+  const note = document.createElement('div');
+  note.className = 'sched-archival-note';
+  note.style.marginTop = '16px';
+  note.innerHTML = '<strong>Archival Notice:</strong> Desk schedule entries are for archival and transparency purposes only. Weeks may not be edited or removed without Librarian approval. They serve as a permanent record of desk coverage.';
+  body.appendChild(note);
 }
 
 function renderWeekGrid(container, week) {
@@ -2924,8 +2939,7 @@ function renderWeekGrid(container, week) {
 
   // Time label column
   const SCHED_HOURS = SCHED_END_H - SCHED_START_H;
-  const PAD_H = Math.round(SCHED_SLOT_H / 3);
-  const totalGridH = SCHED_SLOTS * SCHED_SLOT_H + PAD_H * 2;
+  const totalGridH = SCHED_SLOTS * SCHED_SLOT_H;
   const HDR_H = 24;
 
   const timeCol = document.createElement('div');
@@ -2941,7 +2955,7 @@ function renderWeekGrid(container, week) {
   timeBody.style.cssText = `position:relative;flex:1;height:${totalGridH}px;`;
 
   for(let h = 0; h <= SCHED_HOURS; h++) {
-    const topPx = PAD_H + h * SCHED_SLOT_H * 2; // offset by pad
+    const topPx = h * SCHED_SLOT_H * 2; // 2 slots per hour
     const label = document.createElement('div');
     label.style.cssText = `
       position:absolute;
@@ -2984,32 +2998,25 @@ function renderWeekGrid(container, week) {
   const shifts = week.shifts || [];
   SCHED_DAYS.forEach((_, di) => {
     const col = document.createElement('div');
-    col.style.cssText = `position:relative;height:${totalGridH}px;border-right:1px solid var(--border);box-sizing:border-box;`;
+    col.style.cssText = 'position:relative;border-right:1px solid var(--border);box-sizing:border-box;';
     if(di === 5) col.style.borderRight = 'none';
 
-    // Top pad row
-    const padTop = document.createElement('div');
-    padTop.style.cssText = `height:${PAD_H}px;box-sizing:border-box;`;
-    col.appendChild(padTop);
-
-    // Slot lines — flow children so they give the column its height
+    // Slot lines
+    const slotWrap = document.createElement('div');
+    slotWrap.style.cssText = 'position:absolute;inset:0;';
     for(let i = 0; i < SCHED_SLOTS; i++) {
       const isHour = i % 2 === 0;
       const s = document.createElement('div');
-      s.style.cssText = `height:${SCHED_SLOT_H}px;border-bottom:${i===SCHED_SLOTS-1?'none':`1px solid ${isHour?'var(--border)':'var(--border2)'}`};box-sizing:border-box;`;
-      col.appendChild(s);
+      s.style.cssText = `height:${SCHED_SLOT_H}px;border-bottom:${i===SCHED_SLOTS-1?'none':`1px solid ${isHour?'var(--border2)':'var(--border)'}`};box-sizing:border-box;`;
+      slotWrap.appendChild(s);
     }
+    col.appendChild(slotWrap);
 
-    // Bottom pad row
-    const padBot = document.createElement('div');
-    padBot.style.cssText = `height:${PAD_H}px;box-sizing:border-box;`;
-    col.appendChild(padBot);
-
-    // Shift blocks — absolutely positioned, offset by PAD_H
+    // Shift blocks
     shifts.filter(s => s.day === di).forEach(s => {
       const staffCol = staffCols.find(c => c.id === s.staffId);
       if(!staffCol) return;
-      const top = PAD_H + s.startSlot * SCHED_SLOT_H;
+      const top = s.startSlot * SCHED_SLOT_H;
       const height = (s.endSlot - s.startSlot) * SCHED_SLOT_H;
       const rgb = hexToRgb(staffCol.color);
       const lum = rgb ? (0.299*rgb.r + 0.587*rgb.g + 0.114*rgb.b)/255 : 1;
@@ -3025,7 +3032,8 @@ function renderWeekGrid(container, week) {
     dayColsRow.appendChild(col);
   });
 
-  dayColsRow.style.height = totalGridH + 'px';
+  // Set explicit height on the cols container
+  dayColsRow.style.height = (SCHED_SLOTS * SCHED_SLOT_H) + 'px';
   daysArea.appendChild(dayColsRow);
   gridOuter.appendChild(daysArea);
   gridWrap.appendChild(gridOuter);
